@@ -93,23 +93,6 @@
         100% { transform: translateY(-20vh) scale(1); opacity: 0; }
     }
 
-    /* Свечение при наведении */
-    .glow-effect {
-        transition: all 0.3s ease;
-    }
-
-    .glow-effect:hover {
-        filter: drop-shadow(0 0 15px rgba(123, 158, 135, 0.5));
-        transform: translateY(-2px);
-    }
-
-    /* Анимация появления уведомлений */
-    @keyframes notificationPop {
-        0% { transform: scale(0) translateY(20px); opacity: 0; }
-        50% { transform: scale(1.1) translateY(-10px); }
-        100% { transform: scale(1) translateY(0); opacity: 1; }
-    }
-
     /* Навигация */
     .navbar {
         position: fixed;
@@ -271,7 +254,7 @@
         box-shadow: 0 10px 25px rgba(123,158,135,0.4);
     }
 
-    /* Общие стили секций */
+    /* Секции */
     .section {
         padding: 5rem 5%;
         position: relative;
@@ -304,7 +287,7 @@
         border-radius: 3px;
     }
 
-    /* Дыхательная анимация */
+    /* Дыхательная практика */
     .breath-card {
         background: rgba(255,255,255,0.3);
         backdrop-filter: blur(15px);
@@ -330,7 +313,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.1s ease;
+        transition: transform 0.1s ease;
         cursor: pointer;
         box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         position: relative;
@@ -384,7 +367,7 @@
         color: #4A5B4E;
     }
 
-    /* Метод 5-4-3-2-1 */
+    /* Карточки методов */
     .method-card {
         background: rgba(255,255,255,0.3);
         backdrop-filter: blur(15px);
@@ -404,6 +387,7 @@
         flex-wrap: wrap;
         gap: 1rem;
         margin-top: 1rem;
+        justify-content: center;
     }
 
     .sense-btn {
@@ -427,7 +411,23 @@
         transform: scale(0.95);
     }
 
-    /* Слова поддержки */
+    /* Стили для видео плеера */
+    .video-player {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .video-player iframe {
+        width: 100%;
+        height: 230px;
+        border: none;
+    }
+
+    /* Поддержка */
     .support-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -461,7 +461,7 @@
         transform: scale(1.2);
     }
 
-    /* Мини-тест с шкалой */
+    /* Шкала */
     .scale-container {
         background: rgba(255,255,255,0.3);
         backdrop-filter: blur(15px);
@@ -527,7 +527,7 @@
         transform: scale(1.01);
     }
 
-    /* Анимированная голова */
+    /* Голова */
     .head-container {
         text-align: center;
         position: relative;
@@ -615,7 +615,7 @@
         50% { transform: translateY(-8px); }
     }
 
-    /* Мини-игра */
+    /* Игра */
     .game-card {
         background: rgba(255,255,255,0.3);
         backdrop-filter: blur(15px);
@@ -651,7 +651,7 @@
         transform: scale(0.95);
     }
 
-    /* Контакты помощи */
+    /* Помощь */
     .help-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -690,41 +690,12 @@
         color: #3D5A45;
     }
 
-    /* Стиль для кнопки разблокировки звука */
-    #soundUnlockBtn {
-        position: fixed;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: linear-gradient(135deg, #7B9E87, #A8C3B2);
-        color: white;
-        padding: 14px 28px;
-        border-radius: 60px;
-        cursor: pointer;
-        z-index: 1001;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-        font-weight: bold;
-        font-size: 1.1rem;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        border: none;
-        transition: all 0.3s ease;
-        animation: pulse 2s infinite;
+    @keyframes notificationPop {
+        0% { transform: scale(0) translateY(20px); opacity: 0; }
+        50% { transform: scale(1.1) translateY(-10px); }
+        100% { transform: scale(1) translateY(0); opacity: 1; }
     }
 
-    #soundUnlockBtn:hover {
-        transform: translateX(-50%) scale(1.05);
-        background: linear-gradient(135deg, #6B8E77, #98B3A2);
-    }
-
-    @keyframes pulse {
-        0% { box-shadow: 0 0 0 0 rgba(123, 158, 135, 0.7); }
-        70% { box-shadow: 0 0 0 15px rgba(123, 158, 135, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(123, 158, 135, 0); }
-    }
-
-    /* Адаптивность */
     @media (max-width: 768px) {
         .nav-links { display: none; }
         .hamburger { display: flex; }
@@ -733,7 +704,7 @@
         .breath-circle { width: 200px; height: 200px; }
         .circle-inner { width: 160px; height: 160px; }
         .game-area { grid-template-columns: repeat(2, 1fr); }
-        #soundUnlockBtn { padding: 10px 20px; font-size: 0.9rem; bottom: 20px; white-space: nowrap; }
+        .video-player iframe { height: 180px; }
     }
 
     @keyframes fadeInUp {
@@ -751,11 +722,6 @@
     <div id="clouds"></div>
     <div id="bubblesContainer"></div>
 
-    <!-- Плавающая кнопка для включения звука -->
-    <div id="soundUnlockBtn">
-        <span>🔊</span> Нажми, чтобы включить звук природы
-    </div>
-
     <nav class="navbar" id="navbar">
         <div class="logo">🌿 Спокойствие</div>
         <ul class="nav-links">
@@ -772,7 +738,6 @@
         </div>
     </nav>
 
-    <!-- Главный экран -->
     <section id="main" class="hero">
         <div class="hero-card">
             <h1>Тревожно? Давай справимся вместе за 1 минуту</h1>
@@ -781,7 +746,6 @@
         </div>
     </section>
 
-    <!-- Остальные секции -->
     <section id="quickHelp" class="section">
         <div class="container">
             <h2 class="section-title">⚡ Быстрая помощь</h2>
@@ -802,9 +766,9 @@
                 <h3>👁️ Метод 5-4-3-2-1</h3>
                 <p>Назови:</p>
                 <div class="sense-buttons">
-                    <button class="sense-btn" onclick="addSense('5 предметов, которые ты видишь')">5 предметов</button>
-                    <button class="sense-btn" onclick="addSense('4 вещи, которые ты чувствуешь')">4 ощущения</button>
-                    <button class="sense-btn" onclick="addSense('3 звука вокруг')">3 звука</button>
+                    <button class="sense-btn" onclick="addSense('5 предметов')">5 предметов</button>
+                    <button class="sense-btn" onclick="addSense('4 ощущения')">4 ощущения</button>
+                    <button class="sense-btn" onclick="addSense('3 звука')">3 звука</button>
                     <button class="sense-btn" onclick="addSense('2 запаха')">2 запаха</button>
                     <button class="sense-btn" onclick="addSense('1 вкус')">1 вкус</button>
                 </div>
@@ -813,20 +777,22 @@
 
             <div class="method-card">
                 <h3>🧘 Расслабление тела</h3>
-                <p>Напряги и расслабь каждую часть тела:</p>
+                <p>Напряги и расслабь:</p>
                 <div class="sense-buttons">
-                    <button class="sense-btn" onclick="relaxBody('кисти рук')">Кисти рук</button>
-                    <button class="sense-btn" onclick="relaxBody('плечи')">Плечи</button>
-                    <button class="sense-btn" onclick="relaxBody('лицо')">Лицо</button>
-                    <button class="sense-btn" onclick="relaxBody('ноги')">Ноги</button>
+                    <button class="sense-btn" onclick="relaxBody('руки')">🖐️ Руки</button>
+                    <button class="sense-btn" onclick="relaxBody('плечи')">🫸 Плечи</button>
+                    <button class="sense-btn" onclick="relaxBody('лицо')">😊 Лицо</button>
+                    <button class="sense-btn" onclick="relaxBody('ноги')">🦵 Ноги</button>
                 </div>
                 <p id="relaxFeedback" style="margin-top: 1rem;"></p>
             </div>
 
             <div class="method-card">
                 <h3>⏱️ Таймер спокойствия</h3>
-                <button class="sense-btn" onclick="startTimer(60)">1 минута</button>
-                <button class="sense-btn" onclick="startTimer(120)">2 минуты</button>
+                <div class="sense-buttons">
+                    <button class="sense-btn" onclick="startTimer(60)">1 минута</button>
+                    <button class="sense-btn" onclick="startTimer(120)">2 минуты</button>
+                </div>
                 <p id="timerDisplay" style="margin-top: 1rem; font-size: 1.5rem;"></p>
             </div>
         </div>
@@ -834,14 +800,26 @@
 
     <section id="support" class="section">
         <div class="container">
-            <h2 class="section-title">💬 Текстовая поддержка</h2>
-            <div class="support-grid" id="supportGrid">
-                <div class="support-card"><div class="support-emoji">🛡️</div><h3>Ты в безопасности</h3><p>Прямо сейчас с тобой всё в порядке</p></div>
-                <div class="support-card"><div class="support-emoji">🌊</div><h3>Это пройдет</h3><p>Тревога как волна - она приходит и уходит</p></div>
-                <div class="support-card"><div class="support-emoji">🧬</div><h3>Тревога - это просто реакция</h3><p>Твой организм пытается защитить тебя</p></div>
+            <h2 class="section-title">💬 Поддержка</h2>
+            <div class="support-grid">
+                <div class="support-card" onclick="showNotification('Ты в безопасности! 🌿', '🛡️')">
+                    <div class="support-emoji">🛡️</div>
+                    <h3>Ты в безопасности</h3>
+                    <p>Прямо сейчас всё в порядке</p>
+                </div>
+                <div class="support-card" onclick="showNotification('Эта волна пройдет 🌊', '🌊')">
+                    <div class="support-emoji">🌊</div>
+                    <h3>Это пройдет</h3>
+                    <p>Тревога как волна</p>
+                </div>
+                <div class="support-card" onclick="showNotification('Ты сильнее, чем кажется 💪', '💪')">
+                    <div class="support-emoji">💪</div>
+                    <h3>Ты справишься</h3>
+                    <p>У тебя есть всё, чтобы справиться</p>
+                </div>
             </div>
             <div style="text-align: center; margin-top: 2rem;">
-                <button class="start-btn" id="moreSupportBtn">Показать еще слова поддержки</button>
+                <button class="start-btn" id="moreSupportBtn">Показать еще</button>
             </div>
             <div id="extraSupport" style="display: none; margin-top: 2rem;"></div>
         </div>
@@ -849,14 +827,14 @@
 
     <section id="test" class="section">
         <div class="container">
-            <h2 class="section-title">📊 Оцени свое состояние</h2>
+            <h2 class="section-title">📊 Оцени состояние</h2>
             <div class="scale-container">
                 <p>Как ты себя чувствуешь?</p>
-                <input type="range" id="moodScale" class="slider" min="0" max="100" value="50">
+                <input type="range" id="moodScale" min="0" max="100" value="50">
                 <div class="scale-value" id="scaleValue">😐 50%</div>
                 <div class="journal-area">
-                    <p>📝 Запиши свои мысли (сохранятся при следующем визите):</p>
-                    <textarea id="journalNotes" rows="3" placeholder="Что ты сейчас чувствуешь? Что помогает?..."></textarea>
+                    <p>📝 Запиши свои мысли:</p>
+                    <textarea id="journalNotes" rows="3" placeholder="Что ты сейчас чувствуешь?..."></textarea>
                 </div>
             </div>
         </div>
@@ -864,20 +842,17 @@
 
     <section id="why" class="section">
         <div class="container">
-            <h2 class="section-title">🧠 Почему возникает тревога?</h2>
+            <h2 class="section-title">🧠 Почему тревога?</h2>
             <div class="head-container">
                 <div class="animated-head" onclick="showRandomFact()">
-                    <div class="eyes">
-                        <div class="eye"></div>
-                        <div class="eye"></div>
-                    </div>
+                    <div class="eyes"><div class="eye"></div><div class="eye"></div></div>
                 </div>
                 <div class="info-bubbles">
-                    <div class="info-bubble" onclick="showInfo('Тревога - это нормальная реакция организма на опасность')">⚠️ Нормальная реакция</div>
-                    <div class="info-bubble" onclick="showInfo('Пульс учащается, чтобы быстрее доставить кислород к мышцам')">❤️ Почему учащается пульс</div>
-                    <div class="info-bubble" onclick="showInfo('Мозг ищет угрозы - так эволюция защищала нас')">💭 Почему появляются мысли</div>
+                    <div class="info-bubble" onclick="showInfo('Тревога - нормальная реакция организма')">⚠️ Норма</div>
+                    <div class="info-bubble" onclick="showInfo('Пульс учащается, чтобы защитить тебя')">❤️ Пульс</div>
+                    <div class="info-bubble" onclick="showInfo('Мозг ищет угрозы для защиты')">💭 Мысли</div>
                 </div>
-                <p id="infoDisplay" style="text-align: center; margin-top: 2rem; background: rgba(255,255,255,0.5); padding: 1rem; border-radius: 1rem;"></p>
+                <p id="infoDisplay" style="background: rgba(255,255,255,0.5); padding: 1rem; border-radius: 1rem; text-align: center;"></p>
             </div>
         </div>
     </section>
@@ -885,9 +860,11 @@
     <section id="distract" class="section">
         <div class="container">
             <h2 class="section-title">🎮 Отвлекись</h2>
+            
+            <!-- Игра -->
             <div class="game-card">
-                <h3>🔍 Найди 5 предметов в комнате</h3>
-                <div class="game-area" id="gameArea">
+                <h3>🔍 Найди 5 предметов</h3>
+                <div class="game-area">
                     <div class="game-item" data-item="лампа">💡 Лампа</div>
                     <div class="game-item" data-item="книга">📖 Книга</div>
                     <div class="game-item" data-item="окно">🪟 Окно</div>
@@ -895,49 +872,38 @@
                     <div class="game-item" data-item="растение">🌵 Растение</div>
                     <div class="game-item" data-item="кружка">☕ Кружка</div>
                 </div>
-                <p>Найденные предметы: <span id="foundCount">0</span>/5</p>
-                <button class="sense-btn" onclick="resetGame()">Новая игра</button>
+                <p>Найдено: <span id="foundCount">0</span>/5</p>
+                <button class="sense-btn" onclick="resetGame()">🔄 Новая игра</button>
             </div>
             
-            <!-- ЗВУКИ ПРИРОДЫ - ИСПРАВЛЕННЫЕ РАБОЧИЕ ССЫЛКИ -->
+            <!-- ВИДЕО СО ЗВУКАМИ ПРИРОДЫ (YouTube) -->
             <div class="method-card" style="margin-top: 2rem;">
-                <h3>🎵 Звуки природы</h3>
+                <h3>🎵 Звуки природы для расслабления</h3>
+                <p style="text-align: center; margin-bottom: 1rem;">Нажми на кнопку, чтобы послушать</p>
                 <div class="sense-buttons">
-                    <button class="sense-btn" onclick="playSound('rain')">🌧️ Дождь</button>
-                    <button class="sense-btn" onclick="playSound('forest')">🌲 Лес</button>
-                    <button class="sense-btn" onclick="playSound('ocean')">🌊 Океан</button>
-                    <button class="sense-btn" onclick="playSound('birds')">🐦 Птицы</button>
-                    <button class="sense-btn" onclick="stopSound()">⏹️ Стоп</button>
+                    <button class="sense-btn" onclick="playVideo('rain')">🌧️ Дождь</button>
+                    <button class="sense-btn" onclick="playVideo('forest')">🌲 Лес</button>
+                    <button class="sense-btn" onclick="playVideo('ocean')">🌊 Океан</button>
+                    <button class="sense-btn" onclick="playVideo('birds')">🐦 Птицы</button>
+                    <button class="sense-btn" onclick="stopVideo()">⏹️ Стоп</button>
                 </div>
-                <div style="margin-top: 1rem;">
-                    <label style="color: #3D5A45;">🔊 Громкость: </label>
-                    <input type="range" id="volumeControl" min="0" max="100" value="50" style="width: 150px; vertical-align: middle;">
+                
+                <!-- Плеер для видео -->
+                <div class="video-player" id="videoPlayer">
+                    <iframe id="youtubeFrame" src="https://www.youtube.com/embed/7FgC9xvW-Dk?si=placeholder" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 </div>
-                <p id="soundStatus" style="margin-top: 1rem;"></p>
+                <p id="soundStatus" style="margin-top: 1rem; text-align: center; color: #7B9E87;"></p>
             </div>
         </div>
     </section>
 
     <section id="help" class="section">
         <div class="container">
-            <h2 class="section-title">🆘 Важно! Если тревога не проходит</h2>
+            <h2 class="section-title">🆘 Помощь</h2>
             <div class="help-grid">
-                <div class="help-card">
-                    <div style="font-size: 3rem;">💬</div>
-                    <h3>Поговори с кем-то</h3>
-                    <p>Близкие люди могут поддержать</p>
-                </div>
-                <div class="help-card">
-                    <div style="font-size: 3rem;">📞</div>
-                    <h3>Телефон доверия</h3>
-                    <p>8-800-2000-122 (круглосуточно)</p>
-                    <p>8(495) 988-44-34 (Москва)</p>
-                </div>
-                <div class="help-card">
-                    <div style="font-size: 3rem;">🩺</div>
-                    <h3>Психолог</h3>
-                    <p>Обратиться к специалисту - это сила</p>
-                </div>
+                <div class="help-card"><div style="font-size: 2.5rem;">💬</div><h3>Поговори с близкими</h3></div>
+                <div class="help-card"><div style="font-size: 2.5rem;">📞</div><h3>8-800-2000-122</h3><p>Телефон доверия</p></div>
+                <div class="help-card"><div style="font-size: 2.5rem;">🩺</div><h3>Психолог</h3><p>Обратиться к специалисту - это сила</p></div>
             </div>
         </div>
     </section>
@@ -1053,163 +1019,53 @@
     `;
     document.head.appendChild(style);
 
-    function createRipple(event, element) {
-        const ripple = document.createElement('div');
-        ripple.style.position = 'absolute';
-        ripple.style.borderRadius = '50%';
-        ripple.style.backgroundColor = 'rgba(255,255,255,0.6)';
-        ripple.style.pointerEvents = 'none';
-        const rect = element.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        ripple.style.width = ripple.style.height = size + 'px';
-        ripple.style.left = (event.clientX - rect.left - size/2) + 'px';
-        ripple.style.top = (event.clientY - rect.top - size/2) + 'px';
-        ripple.style.animation = 'ripple 0.6s linear';
-        element.style.position = 'relative';
-        element.style.overflow = 'hidden';
-        element.appendChild(ripple);
-        setTimeout(() => ripple.remove(), 600);
-    }
-
-    const rippleStyle = document.createElement('style');
-    rippleStyle.textContent = `
-        @keyframes ripple {
-            0% { transform: scale(0); opacity: 0.6; }
-            100% { transform: scale(2); opacity: 0; }
-        }
-    `;
-    document.head.appendChild(rippleStyle);
-
-    // ========== ЗВУКИ ПРИРОДЫ - РАБОЧИЕ ССЫЛКИ ==========
-    let currentAudio = null;
-    let audioUnlocked = false;
-
-    // Функция для разблокировки звука
-    function unlockAudioAndHideButton() {
-        if (audioUnlocked) return;
-        audioUnlocked = true;
+    // ========== ВИДЕО СО ЗВУКАМИ ПРИРОДЫ (YouTube) ==========
+    // ID видео для каждого типа звука
+    const videoIds = {
+        rain: 'V1RPi2MYptM',      // Звук дождя
+        forest: 'eKFTSSKCjWA',    // Звуки леса с птицами
+        ocean: 'V1RPi2MYptM',     // Звуки океана
+        birds: 'zMqM_aO_1H4'      // Пение птиц
+    };
+    
+    const videoTitles = {
+        rain: '🌧️ Шум дождя',
+        forest: '🌲 Звуки леса',
+        ocean: '🌊 Шум океана',
+        birds: '🐦 Пение птиц'
+    };
+    
+    let currentVideoId = null;
+    const iframe = document.getElementById('youtubeFrame');
+    
+    function playVideo(type) {
+        const videoId = videoIds[type];
+        if (!videoId) return;
         
-        // Скрываем кнопку
-        const unlockBtn = document.getElementById('soundUnlockBtn');
-        if (unlockBtn) {
-            unlockBtn.style.opacity = '0';
-            unlockBtn.style.transform = 'translateX(-50%) scale(0.8)';
-            setTimeout(() => {
-                unlockBtn.style.display = 'none';
-            }, 300);
-        }
-        
-        // Создаём тихий звук для "пробуждения" аудиосистемы
-        const testAudio = new Audio();
-        testAudio.volume = 0;
-        testAudio.play().then(() => {
-            console.log('Аудио разблокировано');
-            showNotification('🔊 Звук разблокирован! Теперь можно слушать звуки природы', '✅');
-        }).catch(() => {
-            showNotification('🔊 Звук разблокирован!', '✅');
-        });
-    }
-
-    // Назначаем обработчик на кнопку
-    const unlockBtn = document.getElementById('soundUnlockBtn');
-    if (unlockBtn) {
-        unlockBtn.onclick = unlockAudioAndHideButton;
-    }
-
-    function playSound(type) {
-        // Если звук ещё не разблокирован, показываем кнопку
-        if (!audioUnlocked) {
-            showNotification('🔊 Сначала нажми на кнопку "Включить звук" внизу экрана', '⚠️');
-            return;
-        }
-        
-        if (currentAudio) {
-            currentAudio.pause();
-            currentAudio = null;
-        }
-        
-        // РАБОЧИЕ ссылки на звуки (soundjay.com - стабильный источник)
-        const soundUrls = {
-            rain: 'https://www.soundjay.com/nature/sounds/rain-on-umbrella-01.mp3',
-            forest: 'https://www.soundjay.com/nature/sounds/birds-chirping-01.mp3',
-            ocean: 'https://www.soundjay.com/nature/sounds/ocean-waves-01.mp3',
-            birds: 'https://www.soundjay.com/nature/sounds/birds-singing-01.mp3'
-        };
-        
-        const soundNames = {
-            rain: '🌧️ Шум дождя',
-            forest: '🌲 Звуки леса',
-            ocean: '🌊 Шум океана',
-            birds: '🐦 Пение птиц'
-        };
+        currentVideoId = videoId;
+        // Обновляем iframe с новым видео и автовоспроизведением
+        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&controls=1&rel=0`;
         
         const status = document.getElementById('soundStatus');
-        const volumeSlider = document.getElementById('volumeControl');
-        
-        if (soundUrls[type]) {
-            currentAudio = new Audio(soundUrls[type]);
-            currentAudio.loop = true;
-            
-            if (volumeSlider) {
-                currentAudio.volume = volumeSlider.value / 100;
-            } else {
-                currentAudio.volume = 0.5;
-            }
-            
-            // Пытаемся воспроизвести
-            const playPromise = currentAudio.play();
-            
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    if (status) {
-                        const vol = Math.round(currentAudio.volume * 100);
-                        status.innerHTML = `🎵 Играет: ${soundNames[type]} (громкость ${vol}%)`;
-                        status.style.color = '#7B9E87';
-                    }
-                    showNotification(`Включен звук: ${soundNames[type]}`, '🎵');
-                }).catch(error => {
-                    console.log('Ошибка воспроизведения:', error);
-                    if (status) {
-                        status.innerHTML = '⚠️ Сначала нажми на кнопку "Включить звук" внизу';
-                        status.style.color = '#e67e22';
-                    }
-                });
-            }
-            
-            currentAudio.onerror = () => {
-                if (status) {
-                    status.innerHTML = '❌ Звук не загрузился, попробуйте другой';
-                    status.style.color = '#e74c3c';
-                }
-            };
+        if (status) {
+            status.innerHTML = `🎵 Играет: ${videoTitles[type]} 🎵`;
+            status.style.color = '#7B9E87';
         }
+        showNotification(`Включено: ${videoTitles[type]}`, '🎵');
     }
-
-    function stopSound() {
-        if (currentAudio) {
-            currentAudio.pause();
-            currentAudio = null;
+    
+    function stopVideo() {
+        if (iframe.src) {
+            // Останавливаем видео, перезагружая iframe без видео
+            iframe.src = 'https://www.youtube.com/embed/7FgC9xvW-Dk?si=placeholder';
+            currentVideoId = null;
         }
         const status = document.getElementById('soundStatus');
         if (status) {
-            status.innerHTML = '🔇 Звук выключен';
+            status.innerHTML = '🔇 Видео остановлено';
             status.style.color = '';
         }
-        showNotification('Звук выключен', '🔇');
-    }
-
-    // Регулировка громкости
-    const volumeControl = document.getElementById('volumeControl');
-    if (volumeControl) {
-        volumeControl.oninput = () => {
-            if (currentAudio) {
-                currentAudio.volume = volumeControl.value / 100;
-                const status = document.getElementById('soundStatus');
-                if (status && status.innerHTML.includes('Играет')) {
-                    status.innerHTML = status.innerHTML.replace(/\(громкость \d+%\)/, `(громкость ${volumeControl.value}%)`);
-                }
-            }
-        };
+        showNotification('Видео остановлено', '🔇');
     }
 
     // ========== ОСТАЛЬНЫЕ ФУНКЦИИ ==========
@@ -1288,10 +1144,6 @@
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-        });
-        
-        document.querySelectorAll('button, .game-item, .support-card, .info-bubble').forEach(btn => {
-            btn.addEventListener('click', (e) => createRipple(e, btn));
         });
         
         initMoodScale();
@@ -1469,7 +1321,7 @@
                     showNotification('Новые слова поддержки появились', '💝');
                 } else {
                     extraDiv.style.display = 'none';
-                    btn.innerText = 'Показать еще слова поддержки';
+                    btn.innerText = 'Показать еще';
                 }
             };
         }
