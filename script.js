@@ -4,6 +4,12 @@ const ctx = canvas.getContext('2d');
 let particles = [];
 let mouseX = 0, mouseY = 0;
 let animationId = null;
+let isPageVisible = true;
+
+// Следим за видимостью страницы
+document.addEventListener('visibilitychange', () => {
+    isPageVisible = !document.hidden;
+});
 
 function resizeCanvas() {
     canvas.width = window.innerWidth;
@@ -14,10 +20,10 @@ class Particle {
     constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 3 + 1;
-        this.speedX = Math.random() * 0.5 - 0.25;
-        this.speedY = Math.random() * 0.5 - 0.25;
-        this.color = `rgba(123, 158, 135, ${Math.random() * 0.3 + 0.1})`;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = Math.random() * 0.3 - 0.15;
+        this.speedY = Math.random() * 0.3 - 0.15;
+        this.color = `rgba(123, 158, 135, ${Math.random() * 0.2 + 0.1})`;
     }
     update() {
         this.x += this.speedX;
@@ -25,9 +31,9 @@ class Particle {
         const dx = mouseX - this.x;
         const dy = mouseY - this.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < 100) {
+        if (distance < 100 && isPageVisible) {
             const angle = Math.atan2(dy, dx);
-            const force = (100 - distance) / 1500;
+            const force = (100 - distance) / 2000;
             this.x -= Math.cos(angle) * force;
             this.y -= Math.sin(angle) * force;
         }
@@ -46,13 +52,18 @@ class Particle {
 
 function initParticles() {
     particles = [];
-    for (let i = 0; i < 80; i++) {
+    // Уменьшено количество частиц для производительности
+    for (let i = 0; i < 50; i++) {
         particles.push(new Particle());
     }
 }
 
 function animateParticles() {
-    if (!ctx) return;
+    if (!ctx || !isPageVisible) {
+        if (animationId) cancelAnimationFrame(animationId);
+        animationId = requestAnimationFrame(animateParticles);
+        return;
+    }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     particles.forEach(p => { p.update(); p.draw(); });
     animationId = requestAnimationFrame(animateParticles);
@@ -62,10 +73,10 @@ function createClouds() {
     const container = document.getElementById('clouds');
     if (!container) return;
     container.innerHTML = '';
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 3; i++) {
         const cloud = document.createElement('div');
         cloud.className = 'cloud';
-        const size = Math.random() * 180 + 80;
+        const size = Math.random() * 150 + 80;
         cloud.style.width = size + 'px';
         cloud.style.height = (size * 0.6) + 'px';
         cloud.style.top = Math.random() * 100 + '%';
@@ -80,10 +91,10 @@ function createBubbles() {
     const container = document.getElementById('bubblesContainer');
     if (!container) return;
     container.innerHTML = '';
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 15; i++) {
         const bubble = document.createElement('div');
         bubble.className = 'bubble-particle';
-        const size = Math.random() * 50 + 15;
+        const size = Math.random() * 40 + 15;
         bubble.style.width = size + 'px';
         bubble.style.height = size + 'px';
         bubble.style.left = Math.random() * 100 + '%';
@@ -100,28 +111,28 @@ function showNotification(message, emoji = '✨') {
     document.body.appendChild(notification);
     setTimeout(() => {
         if (notification.parentNode) notification.remove();
-    }, 2500);
+    }, 2000);
 }
 
-// ========== ИГРА: ЛОВИ СПОКОЙНЫЕ МЫСЛИ ==========
+// ========== ИГРА: ЛОВИ СПОКОЙНЫЕ МЫСЛИ (ОПТИМИЗИРОВАННАЯ) ==========
 let gameActive = true;
 let gameScore = 0;
 let gameLives = 3;
 let gameInterval = null;
 let gameThoughts = [];
+let isGameRunning = false;
+let gameLoopId = null;
 
 const calmThoughts = [
     "✨ Я в безопасности", "🌸 Всё хорошо", "💪 Я справлюсь", 
     "🌊 Это пройдет", "🍃 Дыши спокойно", "🌟 Я сильнее тревоги",
-    "💖 Я себя люблю", "🌙 Сейчас здесь и сейчас", "🕊️ Отпускаю страх",
-    "🌈 Всё наладится", "🌿 Я спокойна", "⭐ Я достойна счастья"
+    "💖 Я себя люблю", "🌙 Сейчас здесь и сейчас"
 ];
 
 const anxiousThoughts = [
     "😰 Вдруг случится что-то плохое?", "😥 Я не справлюсь", 
     "😨 Всё идет не так", "😞 Я недостаточно хороша", 
-    "😖 А если они обо мне плохо подумают?", "😩 Я не вывожу",
-    "😭 Всё бессмысленно"
+    "😖 А если они обо мне плохо подумают?"
 ];
 
 function getRandomThought() {
@@ -131,6 +142,7 @@ function getRandomThought() {
     return { text: thought, type: isCalm ? 'calm' : 'anxious' };
 }
 
+// Уменьшенное количество частиц пыли для производительности
 function createDustExplosion(element, isCalm) {
     const rect = element.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
@@ -139,21 +151,22 @@ function createDustExplosion(element, isCalm) {
     element.classList.add('dust-effect');
     
     const dustColor = isCalm ? 
-        ['#7B9E87', '#A8C3B2', '#8BAB97', '#6B8E77', '#9BC0A8'] : 
-        ['#c87a7a', '#e8a0a0', '#b86565', '#d48a8a'];
+        ['#7B9E87', '#A8C3B2', '#8BAB97'] : 
+        ['#c87a7a', '#e8a0a0', '#b86565'];
     
-    const particleCount = Math.min(isCalm ? 25 : 20, 30);
+    // Уменьшено количество частиц с 25 до 12
+    const particleCount = isCalm ? 12 : 10;
     
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.className = 'dust-particle';
         
         const angle = Math.random() * Math.PI * 2;
-        const distance = 40 + Math.random() * 70;
+        const distance = 30 + Math.random() * 50;
         const dx = Math.cos(angle) * distance;
-        const dy = Math.sin(angle) * distance - 30;
+        const dy = Math.sin(angle) * distance - 20;
         
-        const size = 3 + Math.random() * 5;
+        const size = 2 + Math.random() * 4;
         particle.style.width = size + 'px';
         particle.style.height = size + 'px';
         particle.style.background = `radial-gradient(circle, ${dustColor[Math.floor(Math.random() * dustColor.length)]}, ${dustColor[0]})`;
@@ -162,9 +175,9 @@ function createDustExplosion(element, isCalm) {
         particle.style.setProperty('--dx', dx + 'px');
         particle.style.setProperty('--dy', dy + 'px');
         
-        const duration = 0.4 + Math.random() * 0.3;
+        const duration = 0.3 + Math.random() * 0.2;
         particle.style.animation = `dustFly ${duration}s ease-out forwards`;
-        particle.style.animationDelay = (Math.random() * 0.1) + 's';
+        particle.style.animationDelay = (Math.random() * 0.05) + 's';
         
         document.body.appendChild(particle);
         setTimeout(() => { if (particle.parentNode) particle.remove(); }, duration * 1000);
@@ -177,6 +190,9 @@ function createFallingThought() {
     const gameArea = document.getElementById('gameArea');
     if (!gameArea) return;
     
+    // Проверяем, не слишком ли много мыслей на экране
+    if (gameThoughts.length > 8) return;
+    
     const thought = getRandomThought();
     const thoughtEl = document.createElement('div');
     thoughtEl.className = 'falling-thought';
@@ -184,13 +200,16 @@ function createFallingThought() {
         thoughtEl.classList.add('anxious');
     }
     thoughtEl.textContent = thought.text;
-    const maxLeft = Math.max(0, gameArea.clientWidth - 150);
+    const maxLeft = Math.max(0, gameArea.clientWidth - 120);
     thoughtEl.style.left = Math.random() * maxLeft + 'px';
     thoughtEl.style.top = '-50px';
     
+    let isClicked = false;
+    
     thoughtEl.onclick = (e) => {
         e.stopPropagation();
-        if (!gameActive) return;
+        if (!gameActive || isClicked) return;
+        isClicked = true;
         
         createDustExplosion(thoughtEl, thought.type === 'calm');
         
@@ -212,25 +231,33 @@ function createFallingThought() {
             if (thoughtEl.parentNode) thoughtEl.remove();
             const index = gameThoughts.indexOf(thoughtEl);
             if (index > -1) gameThoughts.splice(index, 1);
-        }, 300);
+        }, 200);
     };
     
     gameArea.appendChild(thoughtEl);
     gameThoughts.push(thoughtEl);
     
     let posY = -50;
-    const speed = 1.2 + Math.random() * 1.2;
+    const speed = 1 + Math.random() * 1;
+    let lastTimestamp = Date.now();
+    
     const fallInterval = setInterval(() => {
         if (!thoughtEl.parentNode) {
             clearInterval(fallInterval);
             return;
         }
-        posY += speed;
+        
+        // Плавное движение
+        const now = Date.now();
+        const delta = Math.min(16, now - lastTimestamp);
+        lastTimestamp = now;
+        
+        posY += speed * (delta / 16);
         thoughtEl.style.top = posY + 'px';
         
-        if (posY > gameArea.clientHeight - 60) {
+        if (posY > gameArea.clientHeight - 50) {
             clearInterval(fallInterval);
-            if (thoughtEl.parentNode) {
+            if (thoughtEl.parentNode && !isClicked) {
                 if (thoughtEl.classList.contains('anxious')) {
                     gameLives--;
                     updateGameUI();
@@ -256,17 +283,28 @@ function updateGameUI() {
     if (livesEl) livesEl.innerText = gameLives;
 }
 
+let activeMessage = null;
+
 function showGameMessage(text, color = '#7B9E87') {
     const gameArea = document.getElementById('gameArea');
     if (!gameArea) return;
+    
+    // Удаляем предыдущее сообщение, если есть
+    if (activeMessage && activeMessage.parentNode) {
+        activeMessage.remove();
+    }
+    
     const msg = document.createElement('div');
     msg.className = 'game-message';
     msg.textContent = text;
     msg.style.color = color;
     gameArea.appendChild(msg);
+    activeMessage = msg;
+    
     setTimeout(() => {
         if (msg.parentNode) msg.remove();
-    }, 1500);
+        if (activeMessage === msg) activeMessage = null;
+    }, 1200);
 }
 
 function endGame() {
@@ -285,13 +323,13 @@ function endGame() {
         let advice = '';
         if (gameScore >= 100) {
             message = '🎉 Отличный результат! 🎉';
-            advice = 'Ты хорошо умеешь отличать тревожные мысли от спокойных. Помни, что мысли — это не факты. Продолжай в том же духе! 💪';
+            advice = 'Ты хорошо умеешь отличать тревожные мысли от спокойных. Продолжай в том же духе! 💪';
         } else if (gameScore >= 50) {
             message = '👍 Хороший результат! 👍';
-            advice = 'Ты на правильном пути. Попробуй обращать больше внимания на спокойные, поддерживающие мысли. 🌿';
+            advice = 'Ты на правильном пути. Обращай больше внимания на спокойные мысли. 🌿';
         } else {
             message = '🌱 Ты справилась! 🌱';
-            advice = 'Тревога часто заставляет нас верить негативным мыслям. Тренируйся замечать спокойные мысли — это важный навык. 💚';
+            advice = 'Тренируйся замечать спокойные мысли — это важный навык. 💚';
         }
         
         const existingPanel = document.querySelector('.game-over-panel');
@@ -330,11 +368,12 @@ function restartGame() {
 
 function startGameLoop() {
     if (gameInterval) clearInterval(gameInterval);
+    // Мысли появляются реже - раз в 2 секунды
     gameInterval = setInterval(() => {
-        if (gameActive) {
+        if (gameActive && document.hasFocus()) {
             createFallingThought();
         }
-    }, 1800);
+    }, 2000);
 }
 
 // ========== ВИДЕО СО ЗВУКАМИ ПРИРОДЫ ==========
@@ -393,6 +432,7 @@ function addSense(item) {
             if(senseItems.length >= 5) {
                 feedback.innerHTML += '<br>🎉 Молодец! Тревога снижается!';
                 showNotification('Ты справилась! Тревога отступает!', '🎉');
+                senseItems = [];
             }
         }
     }
@@ -403,7 +443,7 @@ function relaxBody(part) {
     if(feedback) {
         feedback.innerHTML = `✨ Расслабь ${part}... Чувствуешь тепло? ✨`;
         showNotification(`Расслабь ${part}`, '🧘');
-        setTimeout(() => { feedback.innerHTML = ''; }, 2000);
+        setTimeout(() => { feedback.innerHTML = ''; }, 1500);
     }
 }
 
@@ -616,4 +656,13 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         showNotification('Добро пожаловать! Я здесь, чтобы помочь ✨', '🌿');
     }, 1000);
+});
+
+// Очистка при уходе со страницы
+window.addEventListener('beforeunload', () => {
+    if (gameInterval) clearInterval(gameInterval);
+    if (animationId) cancelAnimationFrame(animationId);
+    gameThoughts.forEach(thought => {
+        if (thought.fallInterval) clearInterval(thought.fallInterval);
+    });
 });
