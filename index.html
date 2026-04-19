@@ -690,6 +690,40 @@
         color: #3D5A45;
     }
 
+    /* Стиль для кнопки разблокировки звука */
+    #soundUnlockBtn {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #7B9E87, #A8C3B2);
+        color: white;
+        padding: 14px 28px;
+        border-radius: 60px;
+        cursor: pointer;
+        z-index: 1001;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        font-weight: bold;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: none;
+        transition: all 0.3s ease;
+        animation: pulse 2s infinite;
+    }
+
+    #soundUnlockBtn:hover {
+        transform: translateX(-50%) scale(1.05);
+        background: linear-gradient(135deg, #6B8E77, #98B3A2);
+    }
+
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(123, 158, 135, 0.7); }
+        70% { box-shadow: 0 0 0 15px rgba(123, 158, 135, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(123, 158, 135, 0); }
+    }
+
     /* Адаптивность */
     @media (max-width: 768px) {
         .nav-links { display: none; }
@@ -699,6 +733,7 @@
         .breath-circle { width: 200px; height: 200px; }
         .circle-inner { width: 160px; height: 160px; }
         .game-area { grid-template-columns: repeat(2, 1fr); }
+        #soundUnlockBtn { padding: 10px 20px; font-size: 0.9rem; bottom: 20px; white-space: nowrap; }
     }
 
     @keyframes fadeInUp {
@@ -715,6 +750,11 @@
     <div class="gradient-bg"></div>
     <div id="clouds"></div>
     <div id="bubblesContainer"></div>
+
+    <!-- Плавающая кнопка для включения звука -->
+    <div id="soundUnlockBtn">
+        <span>🔊</span> Нажми, чтобы включить звук природы
+    </div>
 
     <nav class="navbar" id="navbar">
         <div class="logo">🌿 Спокойствие</div>
@@ -1040,26 +1080,49 @@
     `;
     document.head.appendChild(rippleStyle);
 
-    // ========== ЗВУКИ ПРИРОДЫ - РАБОЧИЕ ССЫЛКИ (soundjay.com) ==========
+    // ========== ЗВУКИ ПРИРОДЫ - РАБОЧИЕ ССЫЛКИ ==========
     let currentAudio = null;
     let audioUnlocked = false;
 
-    // Функция для разблокировки звука (нужно для некоторых браузеров)
-    function unlockAudio() {
+    // Функция для разблокировки звука
+    function unlockAudioAndHideButton() {
         if (audioUnlocked) return;
         audioUnlocked = true;
+        
+        // Скрываем кнопку
+        const unlockBtn = document.getElementById('soundUnlockBtn');
+        if (unlockBtn) {
+            unlockBtn.style.opacity = '0';
+            unlockBtn.style.transform = 'translateX(-50%) scale(0.8)';
+            setTimeout(() => {
+                unlockBtn.style.display = 'none';
+            }, 300);
+        }
+        
         // Создаём тихий звук для "пробуждения" аудиосистемы
         const testAudio = new Audio();
         testAudio.volume = 0;
         testAudio.play().then(() => {
             console.log('Аудио разблокировано');
-        }).catch(() => {});
+            showNotification('🔊 Звук разблокирован! Теперь можно слушать звуки природы', '✅');
+        }).catch(() => {
+            showNotification('🔊 Звук разблокирован!', '✅');
+        });
     }
 
-    // Добавляем слушатель первого клика для разблокировки
-    document.body.addEventListener('click', unlockAudio, { once: true });
+    // Назначаем обработчик на кнопку
+    const unlockBtn = document.getElementById('soundUnlockBtn');
+    if (unlockBtn) {
+        unlockBtn.onclick = unlockAudioAndHideButton;
+    }
 
     function playSound(type) {
+        // Если звук ещё не разблокирован, показываем кнопку
+        if (!audioUnlocked) {
+            showNotification('🔊 Сначала нажми на кнопку "Включить звук" внизу экрана', '⚠️');
+            return;
+        }
+        
         if (currentAudio) {
             currentAudio.pause();
             currentAudio = null;
@@ -1107,10 +1170,9 @@
                 }).catch(error => {
                     console.log('Ошибка воспроизведения:', error);
                     if (status) {
-                        status.innerHTML = '⚠️ Кликните по странице, затем снова на звук';
+                        status.innerHTML = '⚠️ Сначала нажми на кнопку "Включить звук" внизу';
                         status.style.color = '#e67e22';
                     }
-                    showNotification('Кликните по странице для включения звука', '🔊');
                 });
             }
             
@@ -1248,10 +1310,6 @@
         
         setTimeout(() => {
             showNotification('Добро пожаловать! Я здесь, чтобы помочь ✨', '🌿');
-            // Небольшая подсказка о звуках
-            setTimeout(() => {
-                showNotification('🔊 Нажми на любую кнопку звука, кликни по странице, если звук не работает', '🎵');
-            }, 3000);
         }, 1000);
     });
 
