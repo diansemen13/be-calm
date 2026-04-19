@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Спокойствие - Помощь при тревоге</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Nunito', sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    /* Канвас для частиц */
+    #particleCanvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -2;
+        pointer-events: none;
+    }
+
+    /* Градиентный фон */
+    .gradient-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -3;
+        background: linear-gradient(135deg, 
+            #fdf4e3 0%,
+            #f0e6d2 15%,
+            #e8d5c4 30%,
+            #d4e2d4 50%,
+            #c5d9e8 70%,
+            #e8d5c4 85%,
+            #f0e6d2 100%);
+        background-size: 400% 400%;
+        animation: gradientFlow 20s ease infinite;
+    }
+
+    @keyframes gradientFlow {
+        0% { background-position: 0% 50%; }
+        25% { background-position: 50% 100%; }
+        50% { background-position: 100% 50%; }
+        75% { background-position: 50% 0%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Плавающие облака */
+    .cloud {
+        position: fixed;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 1000px;
+        filter: blur(20px);
+        pointer-events: none;
+        z-index: -1;
+        animation: floatCloud 30s infinite linear;
+    }
+
+    @keyframes floatCloud {
+        0% { transform: translateX(-20%) translateY(0); }
+        50% { transform: translateX(20%) translateY(-20px); }
+        100% { transform: translateX(-20%) translateY(0); }
+    }
+
+    /* Плавающие пузырьки */
+    .bubble-particle {
+        position: fixed;
+        background: radial-gradient(circle, rgba(255,255,255,0.6), rgba(255,255,255,0.1));
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: -1;
+        animation: floatBubble var(--duration, 15s) infinite ease-in-out;
+    }
+
+    @keyframes floatBubble {
+        0% { transform: translateY(100vh) scale(0); opacity: 0; }
+        20% { opacity: 0.6; }
+        80% { opacity: 0.3; }
+        100% { transform: translateY(-20vh) scale(1); opacity: 0; }
+    }
+
+    /* Свечение при наведении */
+    .glow-effect {
+        transition: all 0.3s ease;
+    }
+
+    .glow-effect:hover {
+        filter: drop-shadow(0 0 15px rgba(123, 158, 135, 0.5));
+        transform: translateY(-2px);
+    }
+
+    /* Анимация появления уведомлений */
+    @keyframes notificationPop {
+        0% { transform: scale(0) translateY(20px); opacity: 0; }
+        50% { transform: scale(1.1) translateY(-10px); }
+        100% { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    /* Навигация */
+    .navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(15px);
+        padding: 1rem 5%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1000;
+        box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+        transition: all 0.3s;
+    }
+
+    .navbar.scrolled {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 0.7rem 5%;
+    }
+
+    .logo {
+        font-size: 1.6rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #7B9E87, #A8C3B2);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        transition: all 0.3s;
+    }
+
+    .logo:hover {
+        transform: scale(1.05);
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+    }
+
+    .nav-links a {
+        text-decoration: none;
+        color: #4A5B4E;
+        font-weight: 600;
+        transition: all 0.3s;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .nav-links a::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 2px;
+        background: #7B9E87;
+        transition: width 0.3s;
+    }
+
+    .nav-links a:hover::after {
+        width: 100%;
+    }
+
+    .nav-links a:hover { color: #7B9E87; }
+
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+    }
+
+    .hamburger span {
+        width: 25px;
+        height: 3px;
+        background: #4A5B4E;
+        transition: 0.3s;
+    }
+
+    /* Главный экран */
+    .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .hero-card {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(20px);
+        border-radius: 2rem;
+        padding: 3rem;
+        max-width: 600px;
+        animation: fadeInUp 0.8s ease;
+        border: 1px solid rgba(255,255,255,0.4);
+        transition: all 0.3s;
+    }
+
+    .hero-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.3);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+    .hero h1 {
+        font-size: 2.2rem;
+        background: linear-gradient(135deg, #3D5A45, #7B9E87);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 1rem;
+    }
+
+    .hero p {
+        font-size: 1.2rem;
+        color: #5A6B5E;
+        margin-bottom: 2rem;
+    }
+
+    .start-btn {
+        background: linear-gradient(135deg, #7B9E87, #A8C3B2);
+        color: white;
+        border: none;
+        padding: 1rem 2.5rem;
+        font-size: 1.2rem;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 700;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .start-btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .start-btn:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .start-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(123,158,135,0.4);
+    }
+
+    /* Общие стили секций */
+    .section {
+        padding: 5rem 5%;
+        position: relative;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .section-title {
+        text-align: center;
+        font-size: 2.2rem;
+        color: #3D5A45;
+        margin-bottom: 2rem;
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #7B9E87, #A8C3B2);
+        border-radius: 3px;
+    }
+
+    /* Дыхательная анимация */
+    .breath-card {
+        background: rgba(255,255,255,0.3);
+        backdrop-filter: blur(15px);
+        border-radius: 2rem;
+        padding: 2rem;
+        text-align: center;
+        max-width: 500px;
+        margin: 0 auto;
+        transition: all 0.3s;
+    }
+
+    .breath-card:hover {
+        transform: scale(1.02);
+        background: rgba(255,255,255,0.4);
+    }
+
+    .breath-circle {
+        width: 250px;
+        height: 250px;
+        margin: 2rem auto;
+        background: linear-gradient(135deg, #A8C3B2, #7B9E87);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.1s ease;
+        cursor: pointer;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        position: relative;
+    }
+
+    .breath-circle::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #A8C3B2, #7B9E87);
+        opacity: 0.3;
+        z-index: -1;
+        transition: all 0.3s;
+    }
+
+    .breath-circle:hover::before {
+        top: -15px;
+        left: -15px;
+        right: -15px;
+        bottom: -15px;
+        opacity: 0.5;
+    }
+
+    .circle-inner {
+        width: 200px;
+        height: 200px;
+        background: rgba(255,255,255,0.95);
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .breath-text {
+        font-size: 1.8rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #7B9E87, #A8C3B2);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .breath-timer {
+        font-size: 3rem;
+        font-weight: 300;
+        color: #4A5B4E;
+    }
+
+    /* Метод 5-4-3-2-1 */
+    .method-card {
+        background: rgba(255,255,255,0.3);
+        backdrop-filter: blur(15px);
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        transition: all 0.3s;
+    }
+
+    .method-card:hover {
+        transform: translateX(5px);
+        background: rgba(255,255,255,0.4);
+    }
+
+    .sense-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .sense-btn {
+        background: linear-gradient(135deg, rgba(123,158,135,0.8), rgba(168,195,178,0.8));
+        color: white;
+        border: none;
+        padding: 0.8rem 1.2rem;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.2s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .sense-btn:hover {
+        transform: scale(1.05);
+        background: linear-gradient(135deg, #7B9E87, #A8C3B2);
+    }
+
+    .sense-btn:active {
+        transform: scale(0.95);
+    }
+
+    /* Слова поддержки */
+    .support-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .support-card {
+        background: rgba(255,255,255,0.4);
+        backdrop-filter: blur(12px);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+
+    .support-card:hover {
+        transform: translateY(-8px) rotate(2deg);
+        background: rgba(255,255,255,0.6);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .support-emoji { 
+        font-size: 2.5rem; 
+        margin-bottom: 0.5rem;
+        transition: all 0.3s;
+    }
+
+    .support-card:hover .support-emoji {
+        transform: scale(1.2);
+    }
+
+    /* Мини-тест с шкалой */
+    .scale-container {
+        background: rgba(255,255,255,0.3);
+        backdrop-filter: blur(15px);
+        border-radius: 2rem;
+        padding: 2rem;
+        transition: all 0.3s;
+    }
+
+    .scale-container:hover {
+        transform: translateY(-3px);
+        background: rgba(255,255,255,0.4);
+    }
+
+    .slider {
+        width: 100%;
+        height: 8px;
+        -webkit-appearance: none;
+        background: #D4C4A8;
+        border-radius: 5px;
+        outline: none;
+    }
+
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 25px;
+        height: 25px;
+        background: #7B9E87;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        transition: all 0.2s;
+    }
+
+    .slider::-webkit-slider-thumb:hover {
+        transform: scale(1.2);
+    }
+
+    .scale-value {
+        text-align: center;
+        font-size: 1.5rem;
+        margin: 1rem 0;
+        color: #3D5A45;
+    }
+
+    .journal-area {
+        margin-top: 2rem;
+    }
+
+    .journal-area textarea {
+        width: 100%;
+        padding: 1rem;
+        border: none;
+        border-radius: 1rem;
+        background: rgba(255,255,255,0.7);
+        font-family: inherit;
+        resize: vertical;
+        transition: all 0.3s;
+    }
+
+    .journal-area textarea:focus {
+        outline: none;
+        background: rgba(255,255,255,0.9);
+        transform: scale(1.01);
+    }
+
+    /* Анимированная голова */
+    .head-container {
+        text-align: center;
+        position: relative;
+        min-height: 400px;
+    }
+
+    .animated-head {
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(circle at 30% 35%, #FFE4C4, #F0C9A0);
+        border-radius: 50%;
+        margin: 0 auto 2rem;
+        position: relative;
+        animation: headBob 3s ease-in-out infinite;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .animated-head:hover {
+        transform: scale(1.05);
+    }
+
+    @keyframes headBob {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .eyes {
+        position: absolute;
+        top: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 30px;
+    }
+
+    .eye {
+        width: 20px;
+        height: 20px;
+        background: #4A5B4E;
+        border-radius: 50%;
+        animation: blink 4s infinite;
+        transition: all 0.1s;
+    }
+
+    .animated-head:hover .eye {
+        transform: scale(1.3);
+    }
+
+    @keyframes blink {
+        0%, 94%, 100% { height: 20px; }
+        97% { height: 2px; }
+    }
+
+    .info-bubbles {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .info-bubble {
+        background: rgba(255,255,255,0.5);
+        backdrop-filter: blur(10px);
+        padding: 1rem;
+        border-radius: 2rem;
+        max-width: 200px;
+        animation: floatInfo 3s ease-in-out infinite;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .info-bubble:hover {
+        transform: scale(1.1);
+        background: rgba(255,255,255,0.7);
+    }
+
+    .info-bubble:nth-child(2) { animation-delay: 0.5s; }
+    .info-bubble:nth-child(3) { animation-delay: 1s; }
+
+    @keyframes floatInfo {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+    }
+
+    /* Мини-игра */
+    .game-card {
+        background: rgba(255,255,255,0.3);
+        backdrop-filter: blur(15px);
+        border-radius: 2rem;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .game-area {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin: 2rem 0;
+    }
+
+    .game-item {
+        background: linear-gradient(135deg, rgba(123,158,135,0.8), rgba(168,195,178,0.8));
+        padding: 1rem;
+        border-radius: 1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        color: white;
+    }
+
+    .game-item:hover {
+        transform: translateY(-3px) scale(1.05);
+        background: linear-gradient(135deg, #7B9E87, #A8C3B2);
+    }
+
+    .game-item.found { 
+        opacity: 0.4; 
+        cursor: default;
+        transform: scale(0.95);
+    }
+
+    /* Контакты помощи */
+    .help-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .help-card {
+        background: rgba(255,255,255,0.4);
+        backdrop-filter: blur(12px);
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s;
+    }
+
+    .help-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255,255,255,0.6);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    /* Уведомление */
+    .notification {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(255,255,255,0.95);
+        backdrop-filter: blur(10px);
+        padding: 1rem 1.5rem;
+        border-radius: 1rem;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        z-index: 2000;
+        animation: notificationPop 0.5s ease;
+        border-left: 4px solid #7B9E87;
+        font-weight: 500;
+        color: #3D5A45;
+    }
+
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .nav-links { display: none; }
+        .hamburger { display: flex; }
+        .nav-links.active { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: rgba(255,255,255,0.98); padding: 1rem; gap: 1rem; }
+        .hero h1 { font-size: 1.5rem; }
+        .breath-circle { width: 200px; height: 200px; }
+        .circle-inner { width: 160px; height: 160px; }
+        .game-area { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    button { cursor: pointer; transition: all 0.2s; }
+    button:active { transform: scale(0.98); }
+    </style>
+</head>
+<body>
+    <canvas id="particleCanvas"></canvas>
+    <div class="gradient-bg"></div>
+    <div id="clouds"></div>
+    <div id="bubblesContainer"></div>
+
+    <nav class="navbar" id="navbar">
+        <div class="logo">🌿 Спокойствие</div>
+        <ul class="nav-links">
+            <li><a onclick="scrollToSection('main')">Главная</a></li>
+            <li><a onclick="scrollToSection('quickHelp')">Быстрая помощь</a></li>
+            <li><a onclick="scrollToSection('support')">Поддержка</a></li>
+            <li><a onclick="scrollToSection('test')">Тест</a></li>
+            <li><a onclick="scrollToSection('why')">О тревоге</a></li>
+            <li><a onclick="scrollToSection('distract')">Отвлекись</a></li>
+            <li><a onclick="scrollToSection('help')">Помощь</a></li>
+        </ul>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </div>
+    </nav>
+
+    <!-- Главный экран -->
+    <section id="main" class="hero">
+        <div class="hero-card">
+            <h1>Тревожно? Давай справимся вместе за 1 минуту</h1>
+            <p>Здесь ты можешь быстро снизить тревогу</p>
+            <button class="start-btn" onclick="scrollToSection('quickHelp')">Начать</button>
+        </div>
+    </section>
+
+    <!-- Остальные секции остаются без изменений для краткости... -->
+    <section id="quickHelp" class="section">
+        <div class="container">
+            <h2 class="section-title">⚡ Быстрая помощь</h2>
+            
+            <div class="breath-card" style="margin-bottom: 2rem;">
+                <h3>🌬️ Дыхательная практика</h3>
+                <div class="breath-circle" id="breathCircle" onclick="toggleBreathing()">
+                    <div class="circle-inner">
+                        <div class="breath-text" id="breathText">Вдох</div>
+                        <div class="breath-timer" id="breathTimer">4</div>
+                    </div>
+                </div>
+                <p>Вдох 4с → Задержка 4с → Выдох 6с</p>
+                <button class="start-btn" style="padding: 0.5rem 1.5rem; font-size: 1rem;" onclick="toggleBreathing()">Начать дыхание</button>
+            </div>
+
+            <div class="method-card">
+                <h3>👁️ Метод 5-4-3-2-1</h3>
+                <p>Назови:</p>
+                <div class="sense-buttons">
+                    <button class="sense-btn" onclick="addSense('5 предметов, которые ты видишь')">5 предметов</button>
+                    <button class="sense-btn" onclick="addSense('4 вещи, которые ты чувствуешь')">4 ощущения</button>
+                    <button class="sense-btn" onclick="addSense('3 звука вокруг')">3 звука</button>
+                    <button class="sense-btn" onclick="addSense('2 запаха')">2 запаха</button>
+                    <button class="sense-btn" onclick="addSense('1 вкус')">1 вкус</button>
+                </div>
+                <p id="senseFeedback" style="margin-top: 1rem; font-style: italic;"></p>
+            </div>
+
+            <div class="method-card">
+                <h3>🧘 Расслабление тела</h3>
+                <p>Напряги и расслабь каждую часть тела:</p>
+                <div class="sense-buttons">
+                    <button class="sense-btn" onclick="relaxBody('кисти рук')">Кисти рук</button>
+                    <button class="sense-btn" onclick="relaxBody('плечи')">Плечи</button>
+                    <button class="sense-btn" onclick="relaxBody('лицо')">Лицо</button>
+                    <button class="sense-btn" onclick="relaxBody('ноги')">Ноги</button>
+                </div>
+                <p id="relaxFeedback" style="margin-top: 1rem;"></p>
+            </div>
+
+            <div class="method-card">
+                <h3>⏱️ Таймер спокойствия</h3>
+                <button class="sense-btn" onclick="startTimer(60)">1 минута</button>
+                <button class="sense-btn" onclick="startTimer(120)">2 минуты</button>
+                <p id="timerDisplay" style="margin-top: 1rem; font-size: 1.5rem;"></p>
+            </div>
+        </div>
+    </section>
+
+    <section id="support" class="section">
+        <div class="container">
+            <h2 class="section-title">💬 Текстовая поддержка</h2>
+            <div class="support-grid" id="supportGrid">
+                <div class="support-card"><div class="support-emoji">🛡️</div><h3>Ты в безопасности</h3><p>Прямо сейчас с тобой всё в порядке</p></div>
+                <div class="support-card"><div class="support-emoji">🌊</div><h3>Это пройдет</h3><p>Тревога как волна - она приходит и уходит</p></div>
+                <div class="support-card"><div class="support-emoji">🧬</div><h3>Тревога - это просто реакция</h3><p>Твой организм пытается защитить тебя</p></div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="start-btn" id="moreSupportBtn">Показать еще слова поддержки</button>
+            </div>
+            <div id="extraSupport" style="display: none; margin-top: 2rem;"></div>
+        </div>
+    </section>
+
+    <section id="test" class="section">
+        <div class="container">
+            <h2 class="section-title">📊 Оцени свое состояние</h2>
+            <div class="scale-container">
+                <p>Как ты себя чувствуешь?</p>
+                <input type="range" id="moodScale" class="slider" min="0" max="100" value="50">
+                <div class="scale-value" id="scaleValue">😐 50%</div>
+                <div class="journal-area">
+                    <p>📝 Запиши свои мысли (сохранятся при следующем визите):</p>
+                    <textarea id="journalNotes" rows="3" placeholder="Что ты сейчас чувствуешь? Что помогает?..."></textarea>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="why" class="section">
+        <div class="container">
+            <h2 class="section-title">🧠 Почему возникает тревога?</h2>
+            <div class="head-container">
+                <div class="animated-head" onclick="showRandomFact()">
+                    <div class="eyes">
+                        <div class="eye"></div>
+                        <div class="eye"></div>
+                    </div>
+                </div>
+                <div class="info-bubbles">
+                    <div class="info-bubble" onclick="showInfo('Тревога - это нормальная реакция организма на опасность')">⚠️ Нормальная реакция</div>
+                    <div class="info-bubble" onclick="showInfo('Пульс учащается, чтобы быстрее доставить кислород к мышцам')">❤️ Почему учащается пульс</div>
+                    <div class="info-bubble" onclick="showInfo('Мозг ищет угрозы - так эволюция защищала нас')">💭 Почему появляются мысли</div>
+                </div>
+                <p id="infoDisplay" style="text-align: center; margin-top: 2rem; background: rgba(255,255,255,0.5); padding: 1rem; border-radius: 1rem;"></p>
+            </div>
+        </div>
+    </section>
+
+    <section id="distract" class="section">
+        <div class="container">
+            <h2 class="section-title">🎮 Отвлекись</h2>
+            <div class="game-card">
+                <h3>🔍 Найди 5 предметов в комнате</h3>
+                <div class="game-area" id="gameArea">
+                    <div class="game-item" data-item="лампа">💡 Лампа</div>
+                    <div class="game-item" data-item="книга">📖 Книга</div>
+                    <div class="game-item" data-item="окно">🪟 Окно</div>
+                    <div class="game-item" data-item="часы">⏰ Часы</div>
+                    <div class="game-item" data-item="растение">🌵 Растение</div>
+                    <div class="game-item" data-item="кружка">☕ Кружка</div>
+                </div>
+                <p>Найденные предметы: <span id="foundCount">0</span>/5</p>
+                <button class="sense-btn" onclick="resetGame()">Новая игра</button>
+            </div>
+            
+            <div class="method-card" style="margin-top: 2rem;">
+                <h3>🎵 Звуки природы</h3>
+                <button class="sense-btn" onclick="playSound('rain')">🌧️ Дождь</button>
+                <button class="sense-btn" onclick="playSound('forest')">🌲 Лес</button>
+                <button class="sense-btn" onclick="playSound('ocean')">🌊 Океан</button>
+                <button class="sense-btn" onclick="stopSound()">⏹️ Стоп</button>
+                <p id="soundStatus" style="margin-top: 1rem;"></p>
+            </div>
+        </div>
+    </section>
+
+    <section id="help" class="section">
+        <div class="container">
+            <h2 class="section-title">🆘 Важно! Если тревога не проходит</h2>
+            <div class="help-grid">
+                <div class="help-card">
+                    <div style="font-size: 3rem;">💬</div>
+                    <h3>Поговори с кем-то</h3>
+                    <p>Близкие люди могут поддержать</p>
+                </div>
+                <div class="help-card">
+                    <div style="font-size: 3rem;">📞</div>
+                    <h3>Телефон доверия</h3>
+                    <p>8-800-2000-122 (круглосуточно)</p>
+                    <p>8(495) 988-44-34 (Москва)</p>
+                </div>
+                <div class="help-card">
+                    <div style="font-size: 3rem;">🩺</div>
+                    <h3>Психолог</h3>
+                    <p>Обратиться к специалисту - это сила</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 2rem; background: rgba(61,90,69,0.8); color: white;">
+        <p>Помни: ты не один. Забота о себе - это важно ❤️</p>
+    </footer>
+
+    <script>
+    // Частицы на канвасе
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let mouseX = 0, mouseY = 0;
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 3 + 1;
+            this.speedX = Math.random() * 1 - 0.5;
+            this.speedY = Math.random() * 1 - 0.5;
+            this.color = `rgba(123, 158, 135, ${Math.random() * 0.3 + 0.1})`;
+        }
+
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            
+            // Притяжение к курсору
+            const dx = mouseX - this.x;
+            const dy = mouseY - this.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < 100) {
+                const angle = Math.atan2(dy, dx);
+                const force = (100 - distance) / 1000;
+                this.x -= Math.cos(angle) * force;
+                this.y -= Math.sin(angle) * force;
+            }
+            
+            if (this.x < 0) this.x = canvas.width;
+            if (this.x > canvas.width) this.x = 0;
+            if (this.y < 0) this.y = canvas.height;
+            if (this.y > canvas.height) this.y = 0;
+        }
+
+        draw() {
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    function initParticles() {
+        for (let i = 0; i < 100; i++) {
+            particles.push(new Particle());
+        }
+    }
+
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(particle => {
+            particle.update();
+            particle.draw();
+        });
+        requestAnimationFrame(animateParticles);
+    }
+
+    // Облака
+    function createClouds() {
+        const cloudContainer = document.getElementById('clouds');
+        for (let i = 0; i < 5; i++) {
+            const cloud = document.createElement('div');
+            cloud.className = 'cloud';
+            const size = Math.random() * 200 + 100;
+            cloud.style.width = size + 'px';
+            cloud.style.height = (size * 0.6) + 'px';
+            cloud.style.top = Math.random() * 100 + '%';
+            cloud.style.left = Math.random() * 100 + '%';
+            cloud.style.animationDelay = Math.random() * 10 + 's';
+            cloud.style.animationDuration = Math.random() * 20 + 20 + 's';
+            cloudContainer.appendChild(cloud);
+        }
+    }
+
+    // Пузырьки
+    function createBubbles() {
+        const container = document.getElementById('bubblesContainer');
+        for (let i = 0; i < 30; i++) {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble-particle';
+            const size = Math.random() * 60 + 20;
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+            bubble.style.left = Math.random() * 100 + '%';
+            bubble.style.setProperty('--duration', Math.random() * 15 + 10 + 's');
+            bubble.style.animationDelay = Math.random() * 10 + 's';
+            container.appendChild(bubble);
+        }
+    }
+
+    // Уведомление
+    function showNotification(message, emoji = '✨') {
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.innerHTML = `${emoji} ${message}`;
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.style.animation = 'fadeOut 0.5s ease';
+            setTimeout(() => notification.remove(), 500);
+        }, 3000);
+    }
+
+    // Добавляем анимацию исчезновения
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.8); }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Создание ripple эффекта
+    function createRipple(event, element) {
+        const ripple = document.createElement('div');
+        ripple.style.position = 'absolute';
+        ripple.style.borderRadius = '50%';
+        ripple.style.backgroundColor = 'rgba(255,255,255,0.6)';
+        ripple.style.pointerEvents = 'none';
+        const rect = element.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = (event.clientX - rect.left - size/2) + 'px';
+        ripple.style.top = (event.clientY - rect.top - size/2) + 'px';
+        ripple.style.animation = 'ripple 0.6s linear';
+        element.style.position = 'relative';
+        element.style.overflow = 'hidden';
+        element.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+    }
+
+    // Добавляем ripple анимацию
+    const rippleStyle = document.createElement('style');
+    rippleStyle.textContent = `
+        @keyframes ripple {
+            0% { transform: scale(0); opacity: 0.6; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(rippleStyle);
+
+    // Функции взаимодействия с пользователем
+    function addSense(item) {
+        if(!senseItems.includes(item)) {
+            senseItems.push(item);
+            const feedback = document.getElementById('senseFeedback');
+            if(feedback) {
+                feedback.innerHTML = `✓ Найдено: ${senseItems.join(', ')}<br>Отлично! Ты заземляешься.`;
+                showNotification(`+ ${item}`, '👁️');
+                if(senseItems.length >= 5) {
+                    feedback.innerHTML += '<br>🎉 Молодец! Тревога снижается!';
+                    showNotification('Ты справился! Тревога отступает!', '🎉');
+                }
+            }
+        }
+    }
+
+    function relaxBody(part) {
+        const feedback = document.getElementById('relaxFeedback');
+        if(feedback) {
+            feedback.innerHTML = `✨ Расслабь ${part}... Чувствуешь тепло? ✨`;
+            showNotification(`Расслабь ${part}`, '🧘');
+            setTimeout(() => { feedback.innerHTML = ''; }, 2000);
+        }
+    }
+
+    function showInfo(msg) {
+        const display = document.getElementById('infoDisplay');
+        if(display) {
+            display.innerText = msg;
+            showNotification(msg, '💡');
+        }
+    }
+
+    function showRandomFact() {
+        const facts = [
+            'Тревога - это способ организма защитить тебя',
+            'Глубокое дыхание активирует парасимпатическую нервную систему',
+            'Физическая активность помогает снизить тревогу',
+            'Ты не один, многие люди испытывают тревогу',
+            'Эта эмоция пройдет, как и все остальные'
+        ];
+        const randomFact = facts[Math.floor(Math.random() * facts.length)];
+        showInfo(randomFact);
+        showNotification(randomFact, '🧠');
+    }
+
+    function startTimer(seconds) {
+        if(timerInterval) clearInterval(timerInterval);
+        let remaining = seconds;
+        const display = document.getElementById('timerDisplay');
+        if(display) {
+            display.innerText = `⏱️ ${remaining} сек`;
+            showNotification(`Таймер на ${seconds/60} минуту запущен`, '⏱️');
+            timerInterval = setInterval(() => {
+                remaining--;
+                display.innerText = `⏱️ ${remaining} сек`;
+                if(remaining <= 0) {
+                    clearInterval(timerInterval);
+                    display.innerText = '✅ Время вышло! Ты справился.';
+                    showNotification('Время вышло! Ты молодец!', '✅');
+                }
+            }, 1000);
+        }
+    }
+
+    // Инициализация и отслеживание мыши
+    document.addEventListener('DOMContentLoaded', () => {
+        resizeCanvas();
+        initParticles();
+        animateParticles();
+        createClouds();
+        createBubbles();
+        
+        window.addEventListener('resize', resizeCanvas);
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        // Добавляем ripple эффект на все кнопки
+        document.querySelectorAll('button, .game-item, .support-card, .info-bubble').forEach(btn => {
+            btn.addEventListener('click', (e) => createRipple(e, btn));
+        });
+        
+        initMoodScale();
+        initJournal();
+        initGame();
+        initSupportButton();
+        
+        // Эффект при скролле для навбара
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if(window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Приветственное уведомление
+        setTimeout(() => {
+            showNotification('Добро пожаловать! Я здесь, чтобы помочь ✨', '🌿');
+        }, 1000);
+    });
+
+    // Остальные функции (дыхание, игра, поддержка и т.д.)
+    let breathingActive = false;
+    let breathIntervalId = null;
+    let breathPhase = 0;
+    let senseItems = [];
+    let timerInterval = null;
+    let found = 0;
+    let currentAudio = null;
+
+    const breathPatterns = [
+        { text: 'Вдох', duration: 4, scale: 1.3 },
+        { text: 'Задержка', duration: 4, scale: 1.3 },
+        { text: 'Выдох', duration: 6, scale: 1 }
+    ];
+
+    function toggleBreathing() {
+        if(breathingActive) {
+            if(breathIntervalId) clearInterval(breathIntervalId);
+            breathingActive = false;
+            const breathText = document.getElementById('breathText');
+            if(breathText) breathText.innerText = 'Готов';
+            showNotification('Дыхание остановлено', '🌬️');
+        } else {
+            breathingActive = true;
+            breathPhase = 0;
+            runBreathCycle();
+            showNotification('Начинаем дыхательную практику', '🌬️');
+        }
+    }
+
+    function runBreathCycle() {
+        if(!breathingActive) return;
+        const pattern = breathPatterns[breathPhase];
+        const circle = document.getElementById('breathCircle');
+        const textEl = document.getElementById('breathText');
+        const timerEl = document.getElementById('breathTimer');
+        
+        if(textEl) textEl.innerText = pattern.text;
+        if(circle) circle.style.transform = `scale(${pattern.scale})`;
+        let timeLeft = pattern.duration;
+        if(timerEl) timerEl.innerText = timeLeft;
+        
+        const interval = setInterval(() => {
+            if(!breathingActive) { clearInterval(interval); return; }
+            timeLeft--;
+            if(timerEl) timerEl.innerText = timeLeft;
+            if(timeLeft <= 0) {
+                clearInterval(interval);
+                breathPhase = (breathPhase + 1) % breathPatterns.length;
+                runBreathCycle();
+            }
+        }, 1000);
+        breathIntervalId = interval;
+    }
+
+    function initMoodScale() {
+        const scale = document.getElementById('moodScale');
+        const scaleVal = document.getElementById('scaleValue');
+        if(scale && scaleVal) {
+            scale.oninput = () => {
+                const val = scale.value;
+                let emoji;
+                if(val < 20) emoji = '😊';
+                else if(val < 40) emoji = '🙂';
+                else if(val < 60) emoji = '😐';
+                else if(val < 80) emoji = '😟';
+                else emoji = '😰';
+                scaleVal.innerText = `${emoji} ${val}%`;
+                localStorage.setItem('lastMood', val);
+                if(val < 30) showNotification('Ты можешь справиться, я рядом', '💪');
+            };
+            const savedMood = localStorage.getItem('lastMood');
+            if(savedMood) {
+                scale.value = savedMood;
+                const val = savedMood;
+                let emoji;
+                if(val < 20) emoji = '😊';
+                else if(val < 40) emoji = '🙂';
+                else if(val < 60) emoji = '😐';
+                else if(val < 80) emoji = '😟';
+                else emoji = '😰';
+                scaleVal.innerText = `${emoji} ${val}%`;
+            }
+        }
+    }
+
+    function initJournal() {
+        const notes = document.getElementById('journalNotes');
+        if(notes) {
+            const savedNotes = localStorage.getItem('journalNotes');
+            if(savedNotes) notes.value = savedNotes;
+            notes.oninput = () => {
+                localStorage.setItem('journalNotes', notes.value);
+                showNotification('Мысли сохранены', '📝');
+            };
+        }
+    }
+
+    function initGame() {
+        const items = document.querySelectorAll('.game-item');
+        found = 0;
+        items.forEach(el => {
+            el.classList.remove('found');
+            el.onclick = () => {
+                if(!el.classList.contains('found')) {
+                    el.classList.add('found');
+                    found++;
+                    const countSpan = document.getElementById('foundCount');
+                    if(countSpan) countSpan.innerText = found;
+                    showNotification(`Найден предмет: ${el.getAttribute('data-item')}`, '🔍');
+                    if(found === 5) {
+                        alert('🎉 Отлично! Ты отвлекся и справился!');
+                        showNotification('Поздравляю! Ты отлично справился!', '🏆');
+                    }
+                }
+            };
+        });
+        const countSpan = document.getElementById('foundCount');
+        if(countSpan) countSpan.innerText = '0';
+    }
+
+    function resetGame() {
+        found = 0;
+        const countSpan = document.getElementById('foundCount');
+        if(countSpan) countSpan.innerText = '0';
+        const items = document.querySelectorAll('.game-item');
+        items.forEach(el => el.classList.remove('found'));
+        showNotification('Игра перезапущена!', '🔄');
+    }
+
+    function playSound(type) {
+        if(currentAudio) {
+            currentAudio.pause();
+            currentAudio = null;
+        }
+        const sounds = { rain: '🌧️ Шум дождя...', forest: '🌲 Пение птиц...', ocean: '🌊 Шум прибоя...' };
+        const status = document.getElementById('soundStatus');
+        if(status) {
+            status.innerHTML = `🎵 Играет: ${sounds[type]} (представь этот звук)`;
+            showNotification(`Включен звук: ${sounds[type]}`, '🎵');
+            setTimeout(() => {
+                if(status.innerHTML.includes('Играет')) status.innerHTML = '';
+            }, 3000);
+        }
+    }
+
+    function stopSound() { 
+        if(currentAudio) {
+            currentAudio.pause();
+            currentAudio = null;
+        }
+        const status = document.getElementById('soundStatus');
+        if(status) status.innerHTML = '🔇 Звук выключен';
+        showNotification('Звук выключен', '🔇');
+    }
+
+    function scrollToSection(id) {
+        const element = document.getElementById(id);
+        if(element) element.scrollIntoView({ behavior: 'smooth' });
+        showNotification(`Переход к разделу: ${id}`, '📌');
+    }
+
+    function toggleMenu() {
+        const navLinks = document.querySelector('.nav-links');
+        if(navLinks) navLinks.classList.toggle('active');
+    }
+
+    const moreSupport = [
+        { emoji: '🌈', text: 'Ты сильнее, чем думаешь' },
+        { emoji: '🌅', text: 'Каждая буря заканчивается' },
+        { emoji: '💪', text: 'У тебя уже есть всё, чтобы справиться' },
+        { emoji: '🌸', text: 'Позволь себе чувствовать - это нормально' }
+    ];
+
+    function initSupportButton() {
+        const btn = document.getElementById('moreSupportBtn');
+        const extraDiv = document.getElementById('extraSupport');
+        if(btn && extraDiv) {
+            btn.onclick = () => {
+                if(extraDiv.style.display === 'none') {
+                    extraDiv.innerHTML = '<div class="support-grid">' + moreSupport.map(s => `<div class="support-card" onclick="showNotification('${s.text}', '${s.emoji}')"><div class="support-emoji">${s.emoji}</div><h3>${s.text}</h3></div>`).join('') + '</div>';
+                    extraDiv.style.display = 'block';
+                    btn.innerText = 'Скрыть';
+                    showNotification('Новые слова поддержки появились', '💝');
+                } else {
+                    extraDiv.style.display = 'none';
+                    btn.innerText = 'Показать еще слова поддержки';
+                }
+            };
+        }
+    }
+    </script>
+</body>
+</html>
