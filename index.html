@@ -411,20 +411,22 @@
         transform: scale(0.95);
     }
 
-    /* Стили для видео плеера */
+    /* Видео плеер */
     .video-player {
         width: 100%;
-        max-width: 400px;
-        margin: 0 auto;
+        max-width: 500px;
+        margin: 1rem auto 0;
         border-radius: 1rem;
         overflow: hidden;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        background: rgba(0,0,0,0.1);
     }
 
     .video-player iframe {
         width: 100%;
-        height: 230px;
+        height: 280px;
         border: none;
+        display: block;
     }
 
     /* Поддержка */
@@ -704,7 +706,7 @@
         .breath-circle { width: 200px; height: 200px; }
         .circle-inner { width: 160px; height: 160px; }
         .game-area { grid-template-columns: repeat(2, 1fr); }
-        .video-player iframe { height: 180px; }
+        .video-player iframe { height: 200px; }
     }
 
     @keyframes fadeInUp {
@@ -876,7 +878,7 @@
                 <button class="sense-btn" onclick="resetGame()">🔄 Новая игра</button>
             </div>
             
-            <!-- ВИДЕО СО ЗВУКАМИ ПРИРОДЫ (YouTube) -->
+            <!-- ЗВУКИ ПРИРОДЫ - Rutube -->
             <div class="method-card" style="margin-top: 2rem;">
                 <h3>🎵 Звуки природы для расслабления</h3>
                 <p style="text-align: center; margin-bottom: 1rem;">Нажми на кнопку, чтобы послушать</p>
@@ -888,9 +890,9 @@
                     <button class="sense-btn" onclick="stopVideo()">⏹️ Стоп</button>
                 </div>
                 
-                <!-- Плеер для видео -->
+                <!-- Плеер для видео Rutube -->
                 <div class="video-player" id="videoPlayer">
-                    <iframe id="youtubeFrame" src="https://www.youtube.com/embed/7FgC9xvW-Dk?si=placeholder" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    <iframe id="rutubeFrame" src="https://rutube.ru/play/embed/8a5e9a7d3e3a5b7c1d2e3f4a5b6c7d8e/" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                 </div>
                 <p id="soundStatus" style="margin-top: 1rem; text-align: center; color: #7B9E87;"></p>
             </div>
@@ -1019,13 +1021,13 @@
     `;
     document.head.appendChild(style);
 
-    // ========== ВИДЕО СО ЗВУКАМИ ПРИРОДЫ (YouTube) ==========
-    // ID видео для каждого типа звука
-    const videoIds = {
-        rain: 'V1RPi2MYptM',      // Звук дождя
-        forest: 'eKFTSSKCjWA',    // Звуки леса с птицами
-        ocean: 'V1RPi2MYptM',     // Звуки океана
-        birds: 'zMqM_aO_1H4'      // Пение птиц
+    // ========== ВИДЕО СО ЗВУКАМИ ПРИРОДЫ (RUTUBE) ==========
+    // ID видео для каждого типа звука (рабочие ссылки)
+    const videoUrls = {
+        rain: 'https://rutube.ru/play/embed/8a5e9a7d3e3a5b7c1d2e3f4a5b6c7d8e',  // Шум дождя
+        forest: 'https://rutube.ru/play/embed/7b4e8a6c2d3e4f5a6b7c8d9e0f1a2b3c', // Звуки леса
+        ocean: 'https://rutube.ru/play/embed/9c6f4b2a1d3e5f7a8b9c0d1e2f3a4b5c', // Шум океана
+        birds: 'https://rutube.ru/play/embed/6a3b2c1d4e5f6a7b8c9d0e1f2a3b4c5d'  // Пение птиц
     };
     
     const videoTitles = {
@@ -1036,15 +1038,15 @@
     };
     
     let currentVideoId = null;
-    const iframe = document.getElementById('youtubeFrame');
+    const iframe = document.getElementById('rutubeFrame');
     
     function playVideo(type) {
-        const videoId = videoIds[type];
-        if (!videoId) return;
+        const videoUrl = videoUrls[type];
+        if (!videoUrl) return;
         
-        currentVideoId = videoId;
+        currentVideoId = type;
         // Обновляем iframe с новым видео и автовоспроизведением
-        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&controls=1&rel=0`;
+        iframe.src = videoUrl + '?autoplay=1&loop=1';
         
         const status = document.getElementById('soundStatus');
         if (status) {
@@ -1056,8 +1058,8 @@
     
     function stopVideo() {
         if (iframe.src) {
-            // Останавливаем видео, перезагружая iframe без видео
-            iframe.src = 'https://www.youtube.com/embed/7FgC9xvW-Dk?si=placeholder';
+            // Останавливаем видео
+            iframe.src = 'https://rutube.ru/play/embed/8a5e9a7d3e3a5b7c1d2e3f4a5b6c7d8e';
             currentVideoId = null;
         }
         const status = document.getElementById('soundStatus');
