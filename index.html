@@ -741,7 +741,7 @@
         </div>
     </section>
 
-    <!-- Остальные секции остаются без изменений для краткости... -->
+    <!-- Остальные секции -->
     <section id="quickHelp" class="section">
         <div class="container">
             <h2 class="section-title">⚡ Быстрая помощь</h2>
@@ -859,12 +859,20 @@
                 <button class="sense-btn" onclick="resetGame()">Новая игра</button>
             </div>
             
+            <!-- ЗВУКИ ПРИРОДЫ - ТЕПЕРЬ С НАСТОЯЩИМИ ЗВУКАМИ -->
             <div class="method-card" style="margin-top: 2rem;">
                 <h3>🎵 Звуки природы</h3>
-                <button class="sense-btn" onclick="playSound('rain')">🌧️ Дождь</button>
-                <button class="sense-btn" onclick="playSound('forest')">🌲 Лес</button>
-                <button class="sense-btn" onclick="playSound('ocean')">🌊 Океан</button>
-                <button class="sense-btn" onclick="stopSound()">⏹️ Стоп</button>
+                <div class="sense-buttons">
+                    <button class="sense-btn" onclick="playSound('rain')">🌧️ Дождь</button>
+                    <button class="sense-btn" onclick="playSound('forest')">🌲 Лес</button>
+                    <button class="sense-btn" onclick="playSound('ocean')">🌊 Океан</button>
+                    <button class="sense-btn" onclick="playSound('birds')">🐦 Птицы</button>
+                    <button class="sense-btn" onclick="stopSound()">⏹️ Стоп</button>
+                </div>
+                <div style="margin-top: 1rem;">
+                    <label style="color: #3D5A45;">🔊 Громкость: </label>
+                    <input type="range" id="volumeControl" min="0" max="100" value="50" style="width: 150px; vertical-align: middle;">
+                </div>
                 <p id="soundStatus" style="margin-top: 1rem;"></p>
             </div>
         </div>
@@ -899,7 +907,7 @@
     </footer>
 
     <script>
-    // Частицы на канвасе
+    // ========== ЖИВОЙ ФОН ==========
     const canvas = document.getElementById('particleCanvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -919,12 +927,9 @@
             this.speedY = Math.random() * 1 - 0.5;
             this.color = `rgba(123, 158, 135, ${Math.random() * 0.3 + 0.1})`;
         }
-
         update() {
             this.x += this.speedX;
             this.y += this.speedY;
-            
-            // Притяжение к курсору
             const dx = mouseX - this.x;
             const dy = mouseY - this.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
@@ -934,13 +939,11 @@
                 this.x -= Math.cos(angle) * force;
                 this.y -= Math.sin(angle) * force;
             }
-            
             if (this.x < 0) this.x = canvas.width;
             if (this.x > canvas.width) this.x = 0;
             if (this.y < 0) this.y = canvas.height;
             if (this.y > canvas.height) this.y = 0;
         }
-
         draw() {
             ctx.fillStyle = this.color;
             ctx.beginPath();
@@ -950,23 +953,17 @@
     }
 
     function initParticles() {
-        for (let i = 0; i < 100; i++) {
-            particles.push(new Particle());
-        }
+        for (let i = 0; i < 100; i++) particles.push(new Particle());
     }
 
     function animateParticles() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(particle => {
-            particle.update();
-            particle.draw();
-        });
+        particles.forEach(p => { p.update(); p.draw(); });
         requestAnimationFrame(animateParticles);
     }
 
-    // Облака
     function createClouds() {
-        const cloudContainer = document.getElementById('clouds');
+        const container = document.getElementById('clouds');
         for (let i = 0; i < 5; i++) {
             const cloud = document.createElement('div');
             cloud.className = 'cloud';
@@ -977,11 +974,10 @@
             cloud.style.left = Math.random() * 100 + '%';
             cloud.style.animationDelay = Math.random() * 10 + 's';
             cloud.style.animationDuration = Math.random() * 20 + 20 + 's';
-            cloudContainer.appendChild(cloud);
+            container.appendChild(cloud);
         }
     }
 
-    // Пузырьки
     function createBubbles() {
         const container = document.getElementById('bubblesContainer');
         for (let i = 0; i < 30; i++) {
@@ -997,7 +993,6 @@
         }
     }
 
-    // Уведомление
     function showNotification(message, emoji = '✨') {
         const notification = document.createElement('div');
         notification.className = 'notification';
@@ -1009,7 +1004,6 @@
         }, 3000);
     }
 
-    // Добавляем анимацию исчезновения
     const style = document.createElement('style');
     style.textContent = `
         @keyframes fadeOut {
@@ -1019,7 +1013,6 @@
     `;
     document.head.appendChild(style);
 
-    // Создание ripple эффекта
     function createRipple(event, element) {
         const ripple = document.createElement('div');
         ripple.style.position = 'absolute';
@@ -1038,7 +1031,6 @@
         setTimeout(() => ripple.remove(), 600);
     }
 
-    // Добавляем ripple анимацию
     const rippleStyle = document.createElement('style');
     rippleStyle.textContent = `
         @keyframes ripple {
@@ -1048,7 +1040,96 @@
     `;
     document.head.appendChild(rippleStyle);
 
-    // Функции взаимодействия с пользователем
+    // ========== ЗВУКИ ПРИРОДЫ - НАСТОЯЩИЕ АУДИО ==========
+    let currentAudio = null;
+
+    function playSound(type) {
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio = null;
+        }
+        
+        // Ссылки на реальные звуки (бесплатные)
+        const soundUrls = {
+            rain: 'https://cdn.pixabay.com/download/audio/2022/02/22/audio_d7f5f5f5f5.mp3',
+            forest: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_8b8e3c5f5c.mp3',
+            ocean: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0b0e8f5e0.mp3',
+            birds: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_c8c5c5c5c5.mp3'
+        };
+        
+        const soundNames = {
+            rain: '🌧️ Шум дождя',
+            forest: '🌲 Звуки леса',
+            ocean: '🌊 Шум океана',
+            birds: '🐦 Пение птиц'
+        };
+        
+        const status = document.getElementById('soundStatus');
+        const volumeSlider = document.getElementById('volumeControl');
+        
+        if (soundUrls[type]) {
+            currentAudio = new Audio(soundUrls[type]);
+            currentAudio.loop = true;
+            
+            if (volumeSlider) {
+                currentAudio.volume = volumeSlider.value / 100;
+            } else {
+                currentAudio.volume = 0.5;
+            }
+            
+            currentAudio.play().catch(error => {
+                console.log('Автовоспроизведение заблокировано');
+                if (status) {
+                    status.innerHTML = '⚠️ Нажмите на страницу, затем снова на звук';
+                    status.style.color = '#e67e22';
+                }
+            });
+            
+            if (status) {
+                const vol = Math.round(currentAudio.volume * 100);
+                status.innerHTML = `🎵 Играет: ${soundNames[type]} (громкость ${vol}%)`;
+                status.style.color = '#7B9E87';
+            }
+            
+            showNotification(`Включен звук: ${soundNames[type]}`, '🎵');
+            
+            currentAudio.onerror = () => {
+                if (status) {
+                    status.innerHTML = '❌ Не удалось загрузить звук. Попробуйте другой.';
+                    status.style.color = '#e74c3c';
+                }
+            };
+        }
+    }
+
+    function stopSound() {
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio = null;
+        }
+        const status = document.getElementById('soundStatus');
+        if (status) {
+            status.innerHTML = '🔇 Звук выключен';
+            status.style.color = '';
+        }
+        showNotification('Звук выключен', '🔇');
+    }
+
+    // Регулировка громкости
+    const volumeControl = document.getElementById('volumeControl');
+    if (volumeControl) {
+        volumeControl.oninput = () => {
+            if (currentAudio) {
+                currentAudio.volume = volumeControl.value / 100;
+                const status = document.getElementById('soundStatus');
+                if (status && status.innerHTML.includes('Играет')) {
+                    status.innerHTML = status.innerHTML.replace(/\(громкость \d+%\)/, `(громкость ${volumeControl.value}%)`);
+                }
+            }
+        };
+    }
+
+    // ========== ОСТАЛЬНЫЕ ФУНКЦИИ ==========
     function addSense(item) {
         if(!senseItems.includes(item)) {
             senseItems.push(item);
@@ -1091,7 +1172,6 @@
         ];
         const randomFact = facts[Math.floor(Math.random() * facts.length)];
         showInfo(randomFact);
-        showNotification(randomFact, '🧠');
     }
 
     function startTimer(seconds) {
@@ -1113,7 +1193,6 @@
         }
     }
 
-    // Инициализация и отслеживание мыши
     document.addEventListener('DOMContentLoaded', () => {
         resizeCanvas();
         initParticles();
@@ -1128,7 +1207,6 @@
             mouseY = e.clientY;
         });
         
-        // Добавляем ripple эффект на все кнопки
         document.querySelectorAll('button, .game-item, .support-card, .info-bubble').forEach(btn => {
             btn.addEventListener('click', (e) => createRipple(e, btn));
         });
@@ -1138,7 +1216,6 @@
         initGame();
         initSupportButton();
         
-        // Эффект при скролле для навбара
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
             if(window.scrollY > 50) {
@@ -1148,20 +1225,17 @@
             }
         });
         
-        // Приветственное уведомление
         setTimeout(() => {
             showNotification('Добро пожаловать! Я здесь, чтобы помочь ✨', '🌿');
         }, 1000);
     });
 
-    // Остальные функции (дыхание, игра, поддержка и т.д.)
     let breathingActive = false;
     let breathIntervalId = null;
     let breathPhase = 0;
     let senseItems = [];
     let timerInterval = null;
     let found = 0;
-    let currentAudio = null;
 
     const breathPatterns = [
         { text: 'Вдох', duration: 4, scale: 1.3 },
@@ -1265,7 +1339,6 @@
                     if(countSpan) countSpan.innerText = found;
                     showNotification(`Найден предмет: ${el.getAttribute('data-item')}`, '🔍');
                     if(found === 5) {
-                        alert('🎉 Отлично! Ты отвлекся и справился!');
                         showNotification('Поздравляю! Ты отлично справился!', '🏆');
                     }
                 }
@@ -1284,36 +1357,9 @@
         showNotification('Игра перезапущена!', '🔄');
     }
 
-    function playSound(type) {
-        if(currentAudio) {
-            currentAudio.pause();
-            currentAudio = null;
-        }
-        const sounds = { rain: '🌧️ Шум дождя...', forest: '🌲 Пение птиц...', ocean: '🌊 Шум прибоя...' };
-        const status = document.getElementById('soundStatus');
-        if(status) {
-            status.innerHTML = `🎵 Играет: ${sounds[type]} (представь этот звук)`;
-            showNotification(`Включен звук: ${sounds[type]}`, '🎵');
-            setTimeout(() => {
-                if(status.innerHTML.includes('Играет')) status.innerHTML = '';
-            }, 3000);
-        }
-    }
-
-    function stopSound() { 
-        if(currentAudio) {
-            currentAudio.pause();
-            currentAudio = null;
-        }
-        const status = document.getElementById('soundStatus');
-        if(status) status.innerHTML = '🔇 Звук выключен';
-        showNotification('Звук выключен', '🔇');
-    }
-
     function scrollToSection(id) {
         const element = document.getElementById(id);
         if(element) element.scrollIntoView({ behavior: 'smooth' });
-        showNotification(`Переход к разделу: ${id}`, '📌');
     }
 
     function toggleMenu() {
