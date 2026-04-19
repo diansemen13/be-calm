@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Спокойствие - Помощь при тревоге</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="animated-bg"></div>
+    <div class="bubbles" id="bubbles"></div>
+
+    <nav class="navbar">
+        <div class="logo">🌿 Спокойствие</div>
+        <ul class="nav-links">
+            <li><a href="#" onclick="scrollToSection('main')">Главная</a></li>
+            <li><a href="#" onclick="scrollToSection('quickHelp')">Быстрая помощь</a></li>
+            <li><a href="#" onclick="scrollToSection('support')">Поддержка</a></li>
+            <li><a href="#" onclick="scrollToSection('test')">Тест</a></li>
+            <li><a href="#" onclick="scrollToSection('why')">О тревоге</a></li>
+            <li><a href="#" onclick="scrollToSection('distract')">Отвлекись</a></li>
+            <li><a href="#" onclick="scrollToSection('help')">Помощь</a></li>
+        </ul>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </div>
+    </nav>
+
+    <!-- Главный экран -->
+    <section id="main" class="hero">
+        <div class="hero-card">
+            <h1>Тревожно? Давай справимся вместе за 1 минуту</h1>
+            <p>Здесь ты можешь быстро снизить тревогу</p>
+            <button class="start-btn" onclick="scrollToSection('quickHelp')">Начать</button>
+        </div>
+    </section>
+
+    <!-- Быстрая помощь -->
+    <section id="quickHelp" class="section">
+        <div class="container">
+            <h2 class="section-title">⚡ Быстрая помощь</h2>
+            
+            <!-- Дыхание -->
+            <div class="breath-card" style="margin-bottom: 2rem;">
+                <h3>🌬️ Дыхательная практика</h3>
+                <div class="breath-circle" id="breathCircle" onclick="toggleBreathing()">
+                    <div class="circle-inner">
+                        <div class="breath-text" id="breathText">Вдох</div>
+                        <div class="breath-timer" id="breathTimer">4</div>
+                    </div>
+                </div>
+                <p>Вдох 4с → Задержка 4с → Выдох 6с</p>
+                <button class="start-btn" style="padding: 0.5rem 1.5rem; font-size: 1rem;" onclick="toggleBreathing()">Начать дыхание</button>
+            </div>
+
+            <!-- Метод 5-4-3-2-1 -->
+            <div class="method-card">
+                <h3>👁️ Метод 5-4-3-2-1</h3>
+                <p>Назови:</p>
+                <div class="sense-buttons">
+                    <button class="sense-btn" onclick="addSense('5 предметов, которые ты видишь')">5 предметов</button>
+                    <button class="sense-btn" onclick="addSense('4 вещи, которые ты чувствуешь')">4 ощущения</button>
+                    <button class="sense-btn" onclick="addSense('3 звука вокруг')">3 звука</button>
+                    <button class="sense-btn" onclick="addSense('2 запаха')">2 запаха</button>
+                    <button class="sense-btn" onclick="addSense('1 вкус')">1 вкус</button>
+                </div>
+                <p id="senseFeedback" style="margin-top: 1rem; font-style: italic;"></p>
+            </div>
+
+            <!-- Расслабление тела -->
+            <div class="method-card">
+                <h3>🧘 Расслабление тела</h3>
+                <p>Напряги и расслабь каждую часть тела:</p>
+                <div class="sense-buttons">
+                    <button class="sense-btn" onclick="relaxBody('кисти рук')">Кисти рук</button>
+                    <button class="sense-btn" onclick="relaxBody('плечи')">Плечи</button>
+                    <button class="sense-btn" onclick="relaxBody('лицо')">Лицо</button>
+                    <button class="sense-btn" onclick="relaxBody('ноги')">Ноги</button>
+                </div>
+                <p id="relaxFeedback" style="margin-top: 1rem;"></p>
+            </div>
+
+            <!-- Таймер -->
+            <div class="method-card">
+                <h3>⏱️ Таймер спокойствия</h3>
+                <button class="sense-btn" onclick="startTimer(60)">1 минута</button>
+                <button class="sense-btn" onclick="startTimer(120)">2 минуты</button>
+                <p id="timerDisplay" style="margin-top: 1rem; font-size: 1.5rem;"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Поддержка -->
+    <section id="support" class="section">
+        <div class="container">
+            <h2 class="section-title">💬 Текстовая поддержка</h2>
+            <div class="support-grid" id="supportGrid">
+                <div class="support-card"><div class="support-emoji">🛡️</div><h3>Ты в безопасности</h3><p>Прямо сейчас с тобой всё в порядке</p></div>
+                <div class="support-card"><div class="support-emoji">🌊</div><h3>Это пройдет</h3><p>Тревога как волна - она приходит и уходит</p></div>
+                <div class="support-card"><div class="support-emoji">🧬</div><h3>Тревога - это просто реакция</h3><p>Твой организм пытается защитить тебя</p></div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="start-btn" id="moreSupportBtn">Показать еще слова поддержки</button>
+            </div>
+            <div id="extraSupport" style="display: none; margin-top: 2rem;"></div>
+        </div>
+    </section>
+
+    <!-- Мини-тест -->
+    <section id="test" class="section">
+        <div class="container">
+            <h2 class="section-title">📊 Оцени свое состояние</h2>
+            <div class="scale-container">
+                <p>Как ты себя чувствуешь?</p>
+                <input type="range" id="moodScale" class="slider" min="0" max="100" value="50">
+                <div class="scale-value" id="scaleValue">😐 50%</div>
+                
+                <div class="journal-area">
+                    <p>📝 Запиши свои мысли (сохранятся при следующем визите):</p>
+                    <textarea id="journalNotes" rows="3" placeholder="Что ты сейчас чувствуешь? Что помогает?..."></textarea>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Почему возникает тревога -->
+    <section id="why" class="section">
+        <div class="container">
+            <h2 class="section-title">🧠 Почему возникает тревога?</h2>
+            <div class="head-container">
+                <div class="animated-head">
+                    <div class="eyes">
+                        <div class="eye"></div>
+                        <div class="eye"></div>
+                    </div>
+                </div>
+                <div class="info-bubbles">
+                    <div class="info-bubble" onclick="showInfo('Тревога - это нормальная реакция организма на опасность')">⚠️ Нормальная реакция</div>
+                    <div class="info-bubble" onclick="showInfo('Пульс учащается, чтобы быстрее доставить кислород к мышцам')">❤️ Почему учащается пульс</div>
+                    <div class="info-bubble" onclick="showInfo('Мозг ищет угрозы - так эволюция защищала нас')">💭 Почему появляются мысли</div>
+                </div>
+                <p id="infoDisplay" style="text-align: center; margin-top: 2rem; background: rgba(255,255,255,0.5); padding: 1rem; border-radius: 1rem;"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Отвлекись -->
+    <section id="distract" class="section">
+        <div class="container">
+            <h2 class="section-title">🎮 Отвлекись</h2>
+            <div class="game-card">
+                <h3>🔍 Найди 5 предметов в комнате</h3>
+                <div class="game-area" id="gameArea">
+                    <div class="game-item" data-item="лампа">💡 Лампа</div>
+                    <div class="game-item" data-item="книга">📖 Книга</div>
+                    <div class="game-item" data-item="окно">🪟 Окно</div>
+                    <div class="game-item" data-item="часы">⏰ Часы</div>
+                    <div class="game-item" data-item="растение">🌵 Растение</div>
+                    <div class="game-item" data-item="кружка">☕ Кружка</div>
+                </div>
+                <p>Найденные предметы: <span id="foundCount">0</span>/5</p>
+                <button class="sense-btn" onclick="resetGame()">Новая игра</button>
+            </div>
+            
+            <div class="method-card" style="margin-top: 2rem;">
+                <h3>🎵 Звуки природы</h3>
+                <button class="sense-btn" onclick="playSound('rain')">🌧️ Дождь</button>
+                <button class="sense-btn" onclick="playSound('forest')">🌲 Лес</button>
+                <button class="sense-btn" onclick="playSound('ocean')">🌊 Океан</button>
+                <button class="sense-btn" onclick="stopSound()">⏹️ Стоп</button>
+                <p id="soundStatus" style="margin-top: 1rem;"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Помощь -->
+    <section id="help" class="section">
+        <div class="container">
+            <h2 class="section-title">🆘 Важно! Если тревога не проходит</h2>
+            <div class="help-grid">
+                <div class="help-card">
+                    <div style="font-size: 3rem;">💬</div>
+                    <h3>Поговори с кем-то</h3>
+                    <p>Близкие люди могут поддержать</p>
+                </div>
+                <div class="help-card">
+                    <div style="font-size: 3rem;">📞</div>
+                    <h3>Телефон доверия</h3>
+                    <p>8-800-2000-122 (круглосуточно)</p>
+                    <p>8(495) 988-44-34 (Москва)</p>
+                </div>
+                <div class="help-card">
+                    <div style="font-size: 3rem;">🩺</div>
+                    <h3>Психолог</h3>
+                    <p>Обратиться к специалисту - это сила</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 2rem; background: rgba(61,90,69,0.8); color: white;">
+        <p>Помни: ты не один. Забота о себе - это важно ❤️</p>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
