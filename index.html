@@ -411,56 +411,150 @@
         transform: scale(0.95);
     }
 
-    /* Видео плеер */
-    .video-player {
-        width: 100%;
-        max-width: 500px;
-        margin: 1rem auto 0;
-        border-radius: 1rem;
-        overflow: hidden;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        background: rgba(0,0,0,0.1);
-    }
-
-    .video-player iframe {
-        width: 100%;
-        height: 280px;
-        border: none;
-        display: block;
-    }
-
-    /* Поддержка */
-    .support-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-        margin-top: 2rem;
-    }
-
-    .support-card {
-        background: rgba(255,255,255,0.4);
-        backdrop-filter: blur(12px);
-        border-radius: 1rem;
+    /* Игра - Лови спокойные мысли */
+    .game-container {
+        background: rgba(255,255,255,0.3);
+        backdrop-filter: blur(15px);
+        border-radius: 2rem;
         padding: 1.5rem;
         text-align: center;
-        transition: all 0.3s;
+        position: relative;
+        min-height: 500px;
+        overflow: hidden;
+    }
+
+    .game-stats {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        background: rgba(255,255,255,0.5);
+        border-radius: 1rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .score-box, .lives-box {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #3D5A45;
+    }
+
+    .score-box span, .lives-box span {
+        color: #7B9E87;
+        font-size: 1.8rem;
+    }
+
+    .game-area {
+        position: relative;
+        height: 400px;
+        overflow: hidden;
+        border-radius: 1rem;
+        background: rgba(255,255,255,0.2);
         cursor: pointer;
     }
 
-    .support-card:hover {
-        transform: translateY(-8px) rotate(2deg);
-        background: rgba(255,255,255,0.6);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    .falling-thought {
+        position: absolute;
+        background: linear-gradient(135deg, rgba(123,158,135,0.95), rgba(168,195,178,0.95));
+        color: white;
+        padding: 0.6rem 1.2rem;
+        border-radius: 2rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.1s;
+        white-space: nowrap;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        animation: bounce 0.3s ease;
+        z-index: 10;
     }
 
-    .support-emoji { 
-        font-size: 2.5rem; 
-        margin-bottom: 0.5rem;
-        transition: all 0.3s;
+    .falling-thought.anxious {
+        background: linear-gradient(135deg, rgba(200,120,120,0.95), rgba(180,100,100,0.95));
     }
 
-    .support-card:hover .support-emoji {
-        transform: scale(1.2);
+    .falling-thought:hover {
+        transform: scale(1.05);
+    }
+
+    @keyframes bounce {
+        0% { transform: scale(0); opacity: 0; }
+        80% { transform: scale(1.1); }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .game-message {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255,255,255,0.95);
+        padding: 1rem 2rem;
+        border-radius: 2rem;
+        font-weight: 700;
+        color: #3D5A45;
+        text-align: center;
+        z-index: 20;
+        pointer-events: none;
+        animation: fadeOut 2s forwards;
+    }
+
+    @keyframes fadeOut {
+        0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        80% { opacity: 1; }
+        100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); visibility: hidden; }
+    }
+
+    .game-over-panel {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255,255,255,0.98);
+        backdrop-filter: blur(10px);
+        padding: 2rem;
+        border-radius: 2rem;
+        text-align: center;
+        z-index: 30;
+        min-width: 280px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+
+    .game-over-panel h3 {
+        font-size: 1.8rem;
+        color: #3D5A45;
+        margin-bottom: 1rem;
+    }
+
+    .game-over-panel p {
+        margin: 0.5rem 0;
+        font-size: 1.1rem;
+    }
+
+    .game-over-panel .final-score {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #7B9E87;
+        margin: 1rem 0;
+    }
+
+    .restart-btn {
+        background: #7B9E87;
+        color: white;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 2rem;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-top: 1rem;
+        transition: all 0.2s;
+    }
+
+    .restart-btn:hover {
+        transform: scale(1.05);
+        background: #6B8E77;
     }
 
     /* Шкала */
@@ -617,7 +711,7 @@
         50% { transform: translateY(-8px); }
     }
 
-    /* Игра */
+    /* Игра "Найди предметы" */
     .game-card {
         background: rgba(255,255,255,0.3);
         backdrop-filter: blur(15px);
@@ -626,7 +720,7 @@
         text-align: center;
     }
 
-    .game-area {
+    .game-area-find {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 1rem;
@@ -651,6 +745,24 @@
         opacity: 0.4; 
         cursor: default;
         transform: scale(0.95);
+    }
+
+    /* Видео плеер */
+    .video-player {
+        width: 100%;
+        max-width: 500px;
+        margin: 1rem auto 0;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        background: rgba(0,0,0,0.1);
+    }
+
+    .video-player iframe {
+        width: 100%;
+        height: 280px;
+        border: none;
+        display: block;
     }
 
     /* Помощь */
@@ -705,8 +817,9 @@
         .hero h1 { font-size: 1.5rem; }
         .breath-circle { width: 200px; height: 200px; }
         .circle-inner { width: 160px; height: 160px; }
-        .game-area { grid-template-columns: repeat(2, 1fr); }
+        .game-area-find { grid-template-columns: repeat(2, 1fr); }
         .video-player iframe { height: 200px; }
+        .falling-thought { font-size: 0.7rem; padding: 0.4rem 0.8rem; white-space: nowrap; }
     }
 
     @keyframes fadeInUp {
@@ -729,7 +842,7 @@
         <ul class="nav-links">
             <li><a onclick="scrollToSection('main')">Главная</a></li>
             <li><a onclick="scrollToSection('quickHelp')">Быстрая помощь</a></li>
-            <li><a onclick="scrollToSection('support')">Поддержка</a></li>
+            <li><a onclick="scrollToSection('mindGame')">Игра для ума</a></li>
             <li><a onclick="scrollToSection('test')">Тест</a></li>
             <li><a onclick="scrollToSection('why')">О тревоге</a></li>
             <li><a onclick="scrollToSection('distract')">Отвлекись</a></li>
@@ -800,30 +913,19 @@
         </div>
     </section>
 
-    <section id="support" class="section">
+    <!-- НОВАЯ ИГРА: ЛОВИ СПОКОЙНЫЕ МЫСЛИ -->
+    <section id="mindGame" class="section">
         <div class="container">
-            <h2 class="section-title">💬 Поддержка</h2>
-            <div class="support-grid">
-                <div class="support-card" onclick="showNotification('Ты в безопасности! 🌿', '🛡️')">
-                    <div class="support-emoji">🛡️</div>
-                    <h3>Ты в безопасности</h3>
-                    <p>Прямо сейчас всё в порядке</p>
+            <h2 class="section-title">🧠 Тренируй ум: лови спокойные мысли</h2>
+            <div class="game-container">
+                <div class="game-stats">
+                    <div class="score-box">🎯 Очки: <span id="gameScore">0</span></div>
+                    <div class="lives-box">❤️ Жизни: <span id="gameLives">3</span></div>
                 </div>
-                <div class="support-card" onclick="showNotification('Эта волна пройдет 🌊', '🌊')">
-                    <div class="support-emoji">🌊</div>
-                    <h3>Это пройдет</h3>
-                    <p>Тревога как волна</p>
-                </div>
-                <div class="support-card" onclick="showNotification('Ты сильнее, чем кажется 💪', '💪')">
-                    <div class="support-emoji">💪</div>
-                    <h3>Ты справишься</h3>
-                    <p>У тебя есть всё, чтобы справиться</p>
+                <div class="game-area" id="gameArea">
+                    <!-- Сюда будут падать мысли -->
                 </div>
             </div>
-            <div style="text-align: center; margin-top: 2rem;">
-                <button class="start-btn" id="moreSupportBtn">Показать еще</button>
-            </div>
-            <div id="extraSupport" style="display: none; margin-top: 2rem;"></div>
         </div>
     </section>
 
@@ -863,10 +965,10 @@
         <div class="container">
             <h2 class="section-title">🎮 Отвлекись</h2>
             
-            <!-- Игра -->
+            <!-- Игра "Найди предметы" -->
             <div class="game-card">
                 <h3>🔍 Найди 5 предметов</h3>
-                <div class="game-area">
+                <div class="game-area-find">
                     <div class="game-item" data-item="лампа">💡 Лампа</div>
                     <div class="game-item" data-item="книга">📖 Книга</div>
                     <div class="game-item" data-item="окно">🪟 Окно</div>
@@ -878,7 +980,7 @@
                 <button class="sense-btn" onclick="resetGame()">🔄 Новая игра</button>
             </div>
             
-            <!-- ЗВУКИ ПРИРОДЫ - Rutube -->
+            <!-- Звуки природы с Rutube -->
             <div class="method-card" style="margin-top: 2rem;">
                 <h3>🎵 Звуки природы для расслабления</h3>
                 <p style="text-align: center; margin-bottom: 1rem;">Нажми на кнопку, чтобы послушать</p>
@@ -889,10 +991,8 @@
                     <button class="sense-btn" onclick="playVideo('birds')">🐦 Птицы</button>
                     <button class="sense-btn" onclick="stopVideo()">⏹️ Стоп</button>
                 </div>
-                
-                <!-- Плеер для видео Rutube -->
                 <div class="video-player" id="videoPlayer">
-                    <iframe id="rutubeFrame" src="https://rutube.ru/play/embed/8a5e9a7d3e3a5b7c1d2e3f4a5b6c7d8e/" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    <iframe id="rutubeFrame" src="https://rutube.ru/play/embed/da2ad72a4458ca5c96c512af707bd0e9" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                 </div>
                 <p id="soundStatus" style="margin-top: 1rem; text-align: center; color: #7B9E87;"></p>
             </div>
@@ -1021,13 +1121,217 @@
     `;
     document.head.appendChild(style);
 
-   // ========== ВИДЕО СО ЗВУКАМИ ПРИРОДЫ (RUTUBE) ==========
-    // Embed-ссылки, созданные на основе ваших URL
+    // ========== ИГРА: ЛОВИ СПОКОЙНЫЕ МЫСЛИ ==========
+    let gameActive = true;
+    let score = 0;
+    let lives = 3;
+    let fallingInterval = null;
+    let thoughtsArray = [];
+    
+    // Список мыслей (спокойные и тревожные)
+    const calmThoughts = [
+        "✨ Я в безопасности", "🌸 Всё хорошо", "💪 Я справлюсь", 
+        "🌊 Это пройдет", "🍃 Дыши спокойно", "🌟 Я сильнее тревоги",
+        "💖 Я себя люблю", "🌙 Сейчас здесь и сейчас", "🕊️ Отпускаю страх",
+        "🌈 Всё наладится", "🌿 Я спокойна", "⭐ Я достойна счастья"
+    ];
+    
+    const anxiousThoughts = [
+        "😰 Вдруг случится что-то плохое?", "😥 Я не справлюсь", 
+        "😨 Всё идет не так", "😞 Я недостаточно хороша", 
+        "😖 А если они обо мне плохо подумают?", "😩 Я не вывожу",
+        "😭 Всё бессмысленно", "😤 Почему всё против меня?"
+    ];
+    
+    function getRandomThought() {
+        const isCalm = Math.random() > 0.5;
+        const list = isCalm ? calmThoughts : anxiousThoughts;
+        const thought = list[Math.floor(Math.random() * list.length)];
+        return { text: thought, type: isCalm ? 'calm' : 'anxious' };
+    }
+    
+    function createFallingThought() {
+        if (!gameActive) return;
+        
+        const gameArea = document.getElementById('gameArea');
+        if (!gameArea) return;
+        
+        const thought = getRandomThought();
+        const thoughtEl = document.createElement('div');
+        thoughtEl.className = 'falling-thought';
+        if (thought.type === 'anxious') {
+            thoughtEl.classList.add('anxious');
+        }
+        thoughtEl.textContent = thought.text;
+        thoughtEl.style.left = Math.random() * (gameArea.clientWidth - 100) + 'px';
+        thoughtEl.style.top = '-50px';
+        
+        thoughtEl.onclick = (e) => {
+            e.stopPropagation();
+            if (!gameActive) return;
+            
+            if (thought.type === 'calm') {
+                // Правильный клик на спокойную мысль
+                score += 10;
+                updateGameUI();
+                showMessage('+10 🌟', '#7B9E87');
+                thoughtEl.remove();
+                // Удаляем из массива
+                const index = thoughtsArray.indexOf(thoughtEl);
+                if (index > -1) thoughtsArray.splice(index, 1);
+            } else {
+                // Ошибка - кликнули на тревожную мысль
+                lives--;
+                updateGameUI();
+                showMessage('❌ -1 жизнь', '#c87a7a');
+                thoughtEl.remove();
+                const index = thoughtsArray.indexOf(thoughtEl);
+                if (index > -1) thoughtsArray.splice(index, 1);
+                
+                if (lives <= 0) {
+                    endGame();
+                }
+            }
+        };
+        
+        gameArea.appendChild(thoughtEl);
+        thoughtsArray.push(thoughtEl);
+        
+        // Анимация падения
+        let posY = -50;
+        const speed = 1.5 + Math.random() * 1.5;
+        const fallInterval = setInterval(() => {
+            if (!thoughtEl.parentNode) {
+                clearInterval(fallInterval);
+                return;
+            }
+            posY += speed;
+            thoughtEl.style.top = posY + 'px';
+            
+            // Если мысль упала вниз
+            if (posY > gameArea.clientHeight - 60) {
+                clearInterval(fallInterval);
+                if (thoughtEl.parentNode) {
+                    if (thoughtEl.classList.contains('anxious')) {
+                        // Тревожная мысль упала - штраф
+                        lives--;
+                        updateGameUI();
+                        showMessage('⚠️ Тревожная мысль упала -1 жизнь', '#c87a7a');
+                        if (lives <= 0) endGame();
+                    } else {
+                        // Спокойная мысль упала без клика - просто пропадает
+                        showMessage('😔 Ты пропустила поддержку...', '#e8a87c');
+                    }
+                    thoughtEl.remove();
+                    const index = thoughtsArray.indexOf(thoughtEl);
+                    if (index > -1) thoughtsArray.splice(index, 1);
+                }
+            }
+        }, 16);
+        
+        // Сохраняем интервал для очистки
+        thoughtEl.fallInterval = fallInterval;
+    }
+    
+    function updateGameUI() {
+        document.getElementById('gameScore').innerText = score;
+        document.getElementById('gameLives').innerText = lives;
+    }
+    
+    function showMessage(text, color = '#7B9E87') {
+        const gameArea = document.getElementById('gameArea');
+        if (!gameArea) return;
+        const msg = document.createElement('div');
+        msg.className = 'game-message';
+        msg.textContent = text;
+        msg.style.color = color;
+        gameArea.appendChild(msg);
+        setTimeout(() => {
+            if (msg.parentNode) msg.remove();
+        }, 2000);
+    }
+    
+    function endGame() {
+        gameActive = false;
+        if (fallingInterval) clearInterval(fallingInterval);
+        
+        // Очищаем все падающие мысли
+        thoughtsArray.forEach(thought => {
+            if (thought.fallInterval) clearInterval(thought.fallInterval);
+            if (thought.parentNode) thought.remove();
+        });
+        thoughtsArray = [];
+        
+        // Вывод результата
+        const gameArea = document.getElementById('gameArea');
+        if (gameArea) {
+            let message = '';
+            let advice = '';
+            if (score >= 100) {
+                message = '🎉 Отличный результат! 🎉';
+                advice = 'Ты хорошо умеешь отличать тревожные мысли от спокойных. Помни, что мысли — это не факты. Ты можешь выбирать, на чем фокусироваться. Продолжай в том же духе! 💪';
+            } else if (score >= 50) {
+                message = '👍 Хороший результат! 👍';
+                advice = 'Ты на правильном пути. Попробуй в следующий раз обращать больше внимания на спокойные, поддерживающие мысли. Они помогают снизить тревогу. 🌿';
+            } else {
+                message = '🌱 Ты справилась! 🌱';
+                advice = 'Тревога часто заставляет нас верить негативным мыслям. Тренируйся замечать спокойные мысли — это важный навык. Каждая твоя попытка делает тебя сильнее! 💚';
+            }
+            
+            const gameContainer = document.querySelector('.game-container');
+            const existingPanel = document.querySelector('.game-over-panel');
+            if (existingPanel) existingPanel.remove();
+            
+            const panel = document.createElement('div');
+            panel.className = 'game-over-panel';
+            panel.innerHTML = `
+                <h3>${message}</h3>
+                <div class="final-score">Твой счёт: ${score} очков</div>
+                <p>💭 ${advice}</p>
+                <button class="restart-btn" onclick="restartGame()">🎮 Играть снова</button>
+            `;
+            gameContainer.appendChild(panel);
+        }
+    }
+    
+    function restartGame() {
+        // Очищаем всё
+        if (fallingInterval) clearInterval(fallingInterval);
+        thoughtsArray.forEach(thought => {
+            if (thought.fallInterval) clearInterval(thought.fallInterval);
+            if (thought.parentNode) thought.remove();
+        });
+        thoughtsArray = [];
+        
+        // Сбрасываем переменные
+        gameActive = true;
+        score = 0;
+        lives = 3;
+        updateGameUI();
+        
+        // Удаляем панель окончания игры
+        const panel = document.querySelector('.game-over-panel');
+        if (panel) panel.remove();
+        
+        // Запускаем заново
+        startGameLoop();
+    }
+    
+    function startGameLoop() {
+        if (fallingInterval) clearInterval(fallingInterval);
+        fallingInterval = setInterval(() => {
+            if (gameActive) {
+                createFallingThought();
+            }
+        }, 1500);
+    }
+    
+    // ========== ВИДЕО СО ЗВУКАМИ ПРИРОДЫ (RUTUBE) ==========
     const videoUrls = {
-        rain: 'https://rutube.ru/play/embed/da2ad72a4458ca5c96c512af707bd0e9',   // Шум дождя
-        forest: 'https://rutube.ru/play/embed/69a8e2aefcce232c75ab9be722f450af', // Звуки леса
-        ocean: 'https://rutube.ru/play/embed/130c28ad909609c2ae4bb3e319a27542',  // Шум океана
-        birds: 'https://rutube.ru/play/embed/deff4c5ee576ab9fd08efc08d5e5ea06'   // Пение птиц
+        rain: 'https://rutube.ru/play/embed/da2ad72a4458ca5c96c512af707bd0e9',
+        forest: 'https://rutube.ru/play/embed/69a8e2aefcce232c75ab9be722f450af',
+        ocean: 'https://rutube.ru/play/embed/130c28ad909609c2ae4bb3e319a27542',
+        birds: 'https://rutube.ru/play/embed/deff4c5ee576ab9fd08efc08d5e5ea06'
     };
     
     const videoTitles = {
@@ -1037,17 +1341,12 @@
         birds: '🐦 Пение птиц'
     };
     
-    let currentVideoId = null;
     const iframe = document.getElementById('rutubeFrame');
     
     function playVideo(type) {
         const videoUrl = videoUrls[type];
         if (!videoUrl) return;
-        
-        currentVideoId = type;
-        // Обновляем iframe с новым видео и автовоспроизведением
         iframe.src = videoUrl + '?autoplay=1&loop=1';
-        
         const status = document.getElementById('soundStatus');
         if (status) {
             status.innerHTML = `🎵 Играет: ${videoTitles[type]} 🎵`;
@@ -1057,11 +1356,7 @@
     }
     
     function stopVideo() {
-        if (iframe.src) {
-            // Останавливаем видео
-            iframe.src = 'https://rutube.ru/play/embed/8a5e9a7d3e3a5b7c1d2e3f4a5b6c7d8e';
-            currentVideoId = null;
-        }
+        iframe.src = 'https://rutube.ru/play/embed/da2ad72a4458ca5c96c512af707bd0e9';
         const status = document.getElementById('soundStatus');
         if (status) {
             status.innerHTML = '🔇 Видео остановлено';
@@ -1071,6 +1366,10 @@
     }
 
     // ========== ОСТАЛЬНЫЕ ФУНКЦИИ ==========
+    let senseItems = [];
+    let timerInterval = null;
+    let found = 0;
+    
     function addSense(item) {
         if(!senseItems.includes(item)) {
             senseItems.push(item);
@@ -1080,7 +1379,7 @@
                 showNotification(`+ ${item}`, '👁️');
                 if(senseItems.length >= 5) {
                     feedback.innerHTML += '<br>🎉 Молодец! Тревога снижается!';
-                    showNotification('Ты справился! Тревога отступает!', '🎉');
+                    showNotification('Ты справилась! Тревога отступает!', '🎉');
                 }
             }
         }
@@ -1108,7 +1407,7 @@
             'Тревога - это способ организма защитить тебя',
             'Глубокое дыхание активирует парасимпатическую нервную систему',
             'Физическая активность помогает снизить тревогу',
-            'Ты не один, многие люди испытывают тревогу',
+            'Ты не одна, многие люди испытывают тревогу',
             'Эта эмоция пройдет, как и все остальные'
         ];
         const randomFact = facts[Math.floor(Math.random() * facts.length)];
@@ -1127,52 +1426,101 @@
                 display.innerText = `⏱️ ${remaining} сек`;
                 if(remaining <= 0) {
                     clearInterval(timerInterval);
-                    display.innerText = '✅ Время вышло! Ты справился.';
+                    display.innerText = '✅ Время вышло! Ты справилась.';
                     showNotification('Время вышло! Ты молодец!', '✅');
                 }
             }, 1000);
         }
     }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        resizeCanvas();
-        initParticles();
-        animateParticles();
-        createClouds();
-        createBubbles();
-        
-        window.addEventListener('resize', resizeCanvas);
-        
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
+    
+    function initGameFind() {
+        const items = document.querySelectorAll('.game-item');
+        found = 0;
+        items.forEach(el => {
+            el.classList.remove('found');
+            el.onclick = () => {
+                if(!el.classList.contains('found')) {
+                    el.classList.add('found');
+                    found++;
+                    const countSpan = document.getElementById('foundCount');
+                    if(countSpan) countSpan.innerText = found;
+                    showNotification(`Найден предмет: ${el.getAttribute('data-item')}`, '🔍');
+                    if(found === 5) {
+                        showNotification('Поздравляю! Ты отлично справилась!', '🏆');
+                    }
+                }
+            };
         });
-        
-        initMoodScale();
-        initJournal();
-        initGame();
-        initSupportButton();
-        
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            if(window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
+        const countSpan = document.getElementById('foundCount');
+        if(countSpan) countSpan.innerText = '0';
+    }
+
+    function resetGame() {
+        found = 0;
+        const countSpan = document.getElementById('foundCount');
+        if(countSpan) countSpan.innerText = '0';
+        const items = document.querySelectorAll('.game-item');
+        items.forEach(el => el.classList.remove('found'));
+        showNotification('Игра перезапущена!', '🔄');
+    }
+
+    function initMoodScale() {
+        const scale = document.getElementById('moodScale');
+        const scaleVal = document.getElementById('scaleValue');
+        if(scale && scaleVal) {
+            scale.oninput = () => {
+                const val = scale.value;
+                let emoji;
+                if(val < 20) emoji = '😊';
+                else if(val < 40) emoji = '🙂';
+                else if(val < 60) emoji = '😐';
+                else if(val < 80) emoji = '😟';
+                else emoji = '😰';
+                scaleVal.innerText = `${emoji} ${val}%`;
+                localStorage.setItem('lastMood', val);
+                if(val < 30) showNotification('Ты можешь справиться, я рядом', '💪');
+            };
+            const savedMood = localStorage.getItem('lastMood');
+            if(savedMood) {
+                scale.value = savedMood;
+                const val = savedMood;
+                let emoji;
+                if(val < 20) emoji = '😊';
+                else if(val < 40) emoji = '🙂';
+                else if(val < 60) emoji = '😐';
+                else if(val < 80) emoji = '😟';
+                else emoji = '😰';
+                scaleVal.innerText = `${emoji} ${val}%`;
             }
-        });
-        
-        setTimeout(() => {
-            showNotification('Добро пожаловать! Я здесь, чтобы помочь ✨', '🌿');
-        }, 1000);
-    });
+        }
+    }
 
+    function initJournal() {
+        const notes = document.getElementById('journalNotes');
+        if(notes) {
+            const savedNotes = localStorage.getItem('journalNotes');
+            if(savedNotes) notes.value = savedNotes;
+            notes.oninput = () => {
+                localStorage.setItem('journalNotes', notes.value);
+                showNotification('Мысли сохранены', '📝');
+            };
+        }
+    }
+
+    function scrollToSection(id) {
+        const element = document.getElementById(id);
+        if(element) element.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function toggleMenu() {
+        const navLinks = document.querySelector('.nav-links');
+        if(navLinks) navLinks.classList.toggle('active');
+    }
+
+    // Дыхательная практика
     let breathingActive = false;
     let breathIntervalId = null;
     let breathPhase = 0;
-    let senseItems = [];
-    let timerInterval = null;
-    let found = 0;
 
     const breathPatterns = [
         { text: 'Вдох', duration: 4, scale: 1.3 },
@@ -1220,114 +1568,41 @@
         breathIntervalId = interval;
     }
 
-    function initMoodScale() {
-        const scale = document.getElementById('moodScale');
-        const scaleVal = document.getElementById('scaleValue');
-        if(scale && scaleVal) {
-            scale.oninput = () => {
-                const val = scale.value;
-                let emoji;
-                if(val < 20) emoji = '😊';
-                else if(val < 40) emoji = '🙂';
-                else if(val < 60) emoji = '😐';
-                else if(val < 80) emoji = '😟';
-                else emoji = '😰';
-                scaleVal.innerText = `${emoji} ${val}%`;
-                localStorage.setItem('lastMood', val);
-                if(val < 30) showNotification('Ты можешь справиться, я рядом', '💪');
-            };
-            const savedMood = localStorage.getItem('lastMood');
-            if(savedMood) {
-                scale.value = savedMood;
-                const val = savedMood;
-                let emoji;
-                if(val < 20) emoji = '😊';
-                else if(val < 40) emoji = '🙂';
-                else if(val < 60) emoji = '😐';
-                else if(val < 80) emoji = '😟';
-                else emoji = '😰';
-                scaleVal.innerText = `${emoji} ${val}%`;
-            }
-        }
-    }
-
-    function initJournal() {
-        const notes = document.getElementById('journalNotes');
-        if(notes) {
-            const savedNotes = localStorage.getItem('journalNotes');
-            if(savedNotes) notes.value = savedNotes;
-            notes.oninput = () => {
-                localStorage.setItem('journalNotes', notes.value);
-                showNotification('Мысли сохранены', '📝');
-            };
-        }
-    }
-
-    function initGame() {
-        const items = document.querySelectorAll('.game-item');
-        found = 0;
-        items.forEach(el => {
-            el.classList.remove('found');
-            el.onclick = () => {
-                if(!el.classList.contains('found')) {
-                    el.classList.add('found');
-                    found++;
-                    const countSpan = document.getElementById('foundCount');
-                    if(countSpan) countSpan.innerText = found;
-                    showNotification(`Найден предмет: ${el.getAttribute('data-item')}`, '🔍');
-                    if(found === 5) {
-                        showNotification('Поздравляю! Ты отлично справился!', '🏆');
-                    }
-                }
-            };
+    // Запуск при загрузке
+    document.addEventListener('DOMContentLoaded', () => {
+        resizeCanvas();
+        initParticles();
+        animateParticles();
+        createClouds();
+        createBubbles();
+        
+        window.addEventListener('resize', resizeCanvas);
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
         });
-        const countSpan = document.getElementById('foundCount');
-        if(countSpan) countSpan.innerText = '0';
-    }
-
-    function resetGame() {
-        found = 0;
-        const countSpan = document.getElementById('foundCount');
-        if(countSpan) countSpan.innerText = '0';
-        const items = document.querySelectorAll('.game-item');
-        items.forEach(el => el.classList.remove('found'));
-        showNotification('Игра перезапущена!', '🔄');
-    }
-
-    function scrollToSection(id) {
-        const element = document.getElementById(id);
-        if(element) element.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function toggleMenu() {
-        const navLinks = document.querySelector('.nav-links');
-        if(navLinks) navLinks.classList.toggle('active');
-    }
-
-    const moreSupport = [
-        { emoji: '🌈', text: 'Ты сильнее, чем думаешь' },
-        { emoji: '🌅', text: 'Каждая буря заканчивается' },
-        { emoji: '💪', text: 'У тебя уже есть всё, чтобы справиться' },
-        { emoji: '🌸', text: 'Позволь себе чувствовать - это нормально' }
-    ];
-
-    function initSupportButton() {
-        const btn = document.getElementById('moreSupportBtn');
-        const extraDiv = document.getElementById('extraSupport');
-        if(btn && extraDiv) {
-            btn.onclick = () => {
-                if(extraDiv.style.display === 'none') {
-                    extraDiv.innerHTML = '<div class="support-grid">' + moreSupport.map(s => `<div class="support-card" onclick="showNotification('${s.text}', '${s.emoji}')"><div class="support-emoji">${s.emoji}</div><h3>${s.text}</h3></div>`).join('') + '</div>';
-                    extraDiv.style.display = 'block';
-                    btn.innerText = 'Скрыть';
-                    showNotification('Новые слова поддержки появились', '💝');
-                } else {
-                    extraDiv.style.display = 'none';
-                    btn.innerText = 'Показать еще';
-                }
-            };
-        }
-    }
+        
+        initMoodScale();
+        initJournal();
+        initGameFind();
+        
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if(window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Запускаем игру
+        startGameLoop();
+        
+        setTimeout(() => {
+            showNotification('Добро пожаловать! Я здесь, чтобы помочь ✨', '🌿');
+        }, 1000);
+    });
     </script>
 </body>
 </html>
