@@ -367,48 +367,73 @@
         color: #4A5B4E;
     }
 
-    /* Карточки методов */
+    /* ========== ИСПРАВЛЕНИЕ 1: Упорядоченные карточки методов ========== */
+    .methods-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
     .method-card {
         background: rgba(255,255,255,0.3);
         backdrop-filter: blur(15px);
         border-radius: 1.5rem;
         padding: 1.5rem;
-        margin: 1rem 0;
         transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
 
     .method-card:hover {
-        transform: translateX(5px);
-        background: rgba(255,255,255,0.4);
+        transform: translateX(8px);
+        background: rgba(255,255,255,0.45);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .method-card h3 {
+        color: #3D5A45;
+        margin-bottom: 0.8rem;
+        font-size: 1.3rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .method-card p {
+        color: #5A6B5E;
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
     }
 
     .sense-buttons {
         display: flex;
         flex-wrap: wrap;
-        gap: 1rem;
-        margin-top: 1rem;
-        justify-content: center;
+        gap: 0.8rem;
+        margin-top: 0.8rem;
+        justify-content: flex-start;
     }
 
     .sense-btn {
-        background: linear-gradient(135deg, rgba(123,158,135,0.8), rgba(168,195,178,0.8));
+        background: linear-gradient(135deg, rgba(123,158,135,0.85), rgba(168,195,178,0.85));
         color: white;
         border: none;
-        padding: 0.8rem 1.2rem;
-        border-radius: 25px;
+        padding: 0.6rem 1.2rem;
+        border-radius: 30px;
         cursor: pointer;
         transition: all 0.2s;
-        position: relative;
-        overflow: hidden;
+        font-weight: 600;
+        font-size: 0.9rem;
     }
 
     .sense-btn:hover {
         transform: scale(1.05);
         background: linear-gradient(135deg, #7B9E87, #A8C3B2);
+        box-shadow: 0 4px 12px rgba(123,158,135,0.3);
     }
 
     .sense-btn:active {
-        transform: scale(0.95);
+        transform: scale(0.98);
     }
 
     /* Игра - Лови спокойные мысли */
@@ -479,31 +504,15 @@
         transform: scale(1.05);
     }
 
-    /* Анимация рассыпания в пыль */
     @keyframes dustExplosion {
-        0% {
-            transform: scale(1);
-            opacity: 1;
-        }
-        30% {
-            transform: scale(1.3);
-            opacity: 0.8;
-        }
-        100% {
-            transform: scale(0);
-            opacity: 0;
-        }
+        0% { transform: scale(1); opacity: 1; }
+        30% { transform: scale(1.3); opacity: 0.8; }
+        100% { transform: scale(0); opacity: 0; }
     }
 
     @keyframes dustFly {
-        0% {
-            transform: translate(0, 0) scale(1);
-            opacity: 0.8;
-        }
-        100% {
-            transform: translate(var(--dx, 50px), var(--dy, -50px)) scale(0);
-            opacity: 0;
-        }
+        0% { transform: translate(0, 0) scale(1); opacity: 0.8; }
+        100% { transform: translate(var(--dx, 50px), var(--dy, -50px)) scale(0); opacity: 0; }
     }
 
     .falling-thought.dust-effect {
@@ -600,77 +609,118 @@
         background: #6B8E77;
     }
 
-    /* Шкала */
+    /* ========== ИСПРАВЛЕНИЕ 2: Улучшенный слайдер и текстовое поле ========== */
     .scale-container {
-        background: rgba(255,255,255,0.3);
+        background: rgba(255,255,255,0.35);
         backdrop-filter: blur(15px);
         border-radius: 2rem;
         padding: 2rem;
         transition: all 0.3s;
+        max-width: 700px;
+        margin: 0 auto;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
     }
 
     .scale-container:hover {
         transform: translateY(-3px);
-        background: rgba(255,255,255,0.4);
+        background: rgba(255,255,255,0.45);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.12);
     }
 
+    .scale-container p {
+        font-size: 1.1rem;
+        color: #3D5A45;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    /* Улучшенный слайдер (тумблер) */
+    .slider-wrapper {
+        padding: 0 0.5rem;
+    }
+    
     .slider {
         width: 100%;
         height: 8px;
         -webkit-appearance: none;
-        background: #D4C4A8;
-        border-radius: 5px;
+        background: linear-gradient(90deg, #A8C3B2, #7B9E87);
+        border-radius: 10px;
         outline: none;
+        cursor: pointer;
     }
 
     .slider::-webkit-slider-thumb {
         -webkit-appearance: none;
-        width: 25px;
-        height: 25px;
-        background: #7B9E87;
+        width: 24px;
+        height: 24px;
+        background: #ffffff;
         border-radius: 50%;
         cursor: pointer;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        box-shadow: 0 2px 12px rgba(0,0,0,0.2);
         transition: all 0.2s;
+        border: 2px solid #7B9E87;
     }
 
     .slider::-webkit-slider-thumb:hover {
         transform: scale(1.2);
+        background: #f0f9f0;
+        box-shadow: 0 4px 15px rgba(123,158,135,0.4);
     }
 
     .scale-value {
         text-align: center;
-        font-size: 1.5rem;
+        font-size: 1.6rem;
         margin: 1rem 0;
         color: #3D5A45;
+        font-weight: 700;
+        background: rgba(255,255,255,0.5);
+        display: inline-block;
+        width: auto;
+        padding: 0.3rem 1rem;
+        border-radius: 50px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
+    /* Улучшенное текстовое поле */
     .journal-area {
-        margin-top: 2rem;
+        margin-top: 1.5rem;
+    }
+
+    .journal-area p {
+        text-align: left;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
     }
 
     .journal-area textarea {
         width: 100%;
         padding: 1rem;
-        border: none;
+        border: 1px solid rgba(123,158,135,0.3);
         border-radius: 1rem;
-        background: rgba(255,255,255,0.7);
+        background: rgba(255,255,255,0.8);
         font-family: inherit;
         resize: vertical;
         transition: all 0.3s;
+        font-size: 0.95rem;
+        color: #3D5A45;
     }
 
     .journal-area textarea:focus {
         outline: none;
-        background: rgba(255,255,255,0.9);
+        background: rgba(255,255,255,0.95);
+        border-color: #7B9E87;
+        box-shadow: 0 4px 12px rgba(123,158,135,0.2);
         transform: scale(1.01);
     }
 
-    /* Голова */
+    /* ========== ИСПРАВЛЕНИЕ 3: Компактный блок "Почему тревога" ========== */
     .head-container {
         text-align: center;
         position: relative;
-        min-height: 400px;
+        max-width: 800px;
+        margin: 0 auto;
     }
 
     .animated-head {
@@ -678,7 +728,7 @@
         height: 150px;
         background: radial-gradient(circle at 30% 35%, #FFE4C4, #F0C9A0);
         border-radius: 50%;
-        margin: 0 auto 2rem;
+        margin: 0 auto 1.5rem;
         position: relative;
         animation: headBob 3s ease-in-out infinite;
         box-shadow: 0 10px 25px rgba(0,0,0,0.1);
@@ -727,31 +777,51 @@
         flex-wrap: wrap;
         justify-content: center;
         gap: 1rem;
-        margin-top: 2rem;
+        margin-bottom: 1.5rem;
     }
 
     .info-bubble {
         background: rgba(255,255,255,0.5);
         backdrop-filter: blur(10px);
-        padding: 1rem;
+        padding: 0.7rem 1.2rem;
         border-radius: 2rem;
-        max-width: 200px;
-        animation: floatInfo 3s ease-in-out infinite;
+        font-size: 0.9rem;
+        font-weight: 600;
         cursor: pointer;
         transition: all 0.3s;
+        color: #3D5A45;
+        display: inline-block;
     }
 
     .info-bubble:hover {
-        transform: scale(1.1);
-        background: rgba(255,255,255,0.7);
+        transform: scale(1.05);
+        background: rgba(255,255,255,0.75);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
-    .info-bubble:nth-child(2) { animation-delay: 0.5s; }
-    .info-bubble:nth-child(3) { animation-delay: 1s; }
+    /* Компактное информационное окно */
+    .info-display-card {
+        background: rgba(255,255,255,0.5);
+        backdrop-filter: blur(12px);
+        padding: 1rem 1.5rem;
+        border-radius: 1.5rem;
+        text-align: center;
+        max-width: 500px;
+        margin: 0 auto;
+        border-left: 4px solid #7B9E87;
+        transition: all 0.3s;
+    }
 
-    @keyframes floatInfo {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-8px); }
+    .info-display-card p {
+        color: #3D5A45;
+        font-size: 1rem;
+        line-height: 1.4;
+        margin: 0;
+    }
+
+    .info-display-card:hover {
+        background: rgba(255,255,255,0.7);
+        transform: translateY(-2px);
     }
 
     /* Игра "Найди предметы" */
@@ -863,6 +933,7 @@
         .game-area-find { grid-template-columns: repeat(2, 1fr); }
         .video-player iframe { height: 200px; }
         .falling-thought { font-size: 0.7rem; padding: 0.4rem 0.8rem; white-space: nowrap; }
+        .scale-value { font-size: 1.3rem; }
     }
 
     @keyframes fadeInUp {
@@ -904,54 +975,58 @@
         </div>
     </section>
 
+    <!-- ========== ИСПРАВЛЕНИЕ 1: Упорядоченные карточки ========== -->
     <section id="quickHelp" class="section">
         <div class="container">
             <h2 class="section-title">⚡ Быстрая помощь</h2>
             
-            <div class="breath-card" style="margin-bottom: 2rem;">
-                <h3>🌬️ Дыхательная практика</h3>
-                <div class="breath-circle" id="breathCircle" onclick="toggleBreathing()">
-                    <div class="circle-inner">
-                        <div class="breath-text" id="breathText">Вдох</div>
-                        <div class="breath-timer" id="breathTimer">4</div>
+            <div class="methods-grid">
+                <div class="breath-card" style="margin-bottom: 0;">
+                    <h3>🌬️ Дыхательная практика</h3>
+                    <div class="breath-circle" id="breathCircle" onclick="toggleBreathing()">
+                        <div class="circle-inner">
+                            <div class="breath-text" id="breathText">Вдох</div>
+                            <div class="breath-timer" id="breathTimer">4</div>
+                        </div>
                     </div>
+                    <p>Вдох 4с → Задержка 4с → Выдох 6с</p>
+                    <button class="start-btn" style="padding: 0.5rem 1.5rem; font-size: 1rem;" onclick="toggleBreathing()">Начать дыхание</button>
                 </div>
-                <p>Вдох 4с → Задержка 4с → Выдох 6с</p>
-                <button class="start-btn" style="padding: 0.5rem 1.5rem; font-size: 1rem;" onclick="toggleBreathing()">Начать дыхание</button>
-            </div>
 
-            <div class="method-card">
-                <h3>👁️ Метод 5-4-3-2-1</h3>
-                <p>Назови:</p>
-                <div class="sense-buttons">
-                    <button class="sense-btn" onclick="addSense('5 предметов')">5 предметов</button>
-                    <button class="sense-btn" onclick="addSense('4 ощущения')">4 ощущения</button>
-                    <button class="sense-btn" onclick="addSense('3 звука')">3 звука</button>
-                    <button class="sense-btn" onclick="addSense('2 запаха')">2 запаха</button>
-                    <button class="sense-btn" onclick="addSense('1 вкус')">1 вкус</button>
+                <div class="method-card">
+                    <h3>👁️ Метод 5-4-3-2-1</h3>
+                    <p>Назови, что ты видишь, чувствуешь и слышишь вокруг:</p>
+                    <div class="sense-buttons">
+                        <button class="sense-btn" onclick="addSense('5 предметов')">👀 5 предметов</button>
+                        <button class="sense-btn" onclick="addSense('4 ощущения')">✋ 4 ощущения</button>
+                        <button class="sense-btn" onclick="addSense('3 звука')">👂 3 звука</button>
+                        <button class="sense-btn" onclick="addSense('2 запаха')">👃 2 запаха</button>
+                        <button class="sense-btn" onclick="addSense('1 вкус')">👄 1 вкус</button>
+                    </div>
+                    <p id="senseFeedback" style="margin-top: 1rem; font-style: italic; font-size: 0.9rem; color: #4A5B4E;"></p>
                 </div>
-                <p id="senseFeedback" style="margin-top: 1rem; font-style: italic;"></p>
-            </div>
 
-            <div class="method-card">
-                <h3>🧘 Расслабление тела</h3>
-                <p>Напряги и расслабь:</p>
-                <div class="sense-buttons">
-                    <button class="sense-btn" onclick="relaxBody('руки')">🖐️ Руки</button>
-                    <button class="sense-btn" onclick="relaxBody('плечи')">🫸 Плечи</button>
-                    <button class="sense-btn" onclick="relaxBody('лицо')">😊 Лицо</button>
-                    <button class="sense-btn" onclick="relaxBody('ноги')">🦵 Ноги</button>
+                <div class="method-card">
+                    <h3>🧘 Расслабление тела</h3>
+                    <p>Напряги и расслабь по очереди:</p>
+                    <div class="sense-buttons">
+                        <button class="sense-btn" onclick="relaxBody('руки')">🖐️ Руки</button>
+                        <button class="sense-btn" onclick="relaxBody('плечи')">🫸 Плечи</button>
+                        <button class="sense-btn" onclick="relaxBody('лицо')">😊 Лицо</button>
+                        <button class="sense-btn" onclick="relaxBody('ноги')">🦵 Ноги</button>
+                    </div>
+                    <p id="relaxFeedback" style="margin-top: 1rem; font-size: 0.9rem;"></p>
                 </div>
-                <p id="relaxFeedback" style="margin-top: 1rem;"></p>
-            </div>
 
-            <div class="method-card">
-                <h3>⏱️ Таймер спокойствия</h3>
-                <div class="sense-buttons">
-                    <button class="sense-btn" onclick="startTimer(60)">1 минута</button>
-                    <button class="sense-btn" onclick="startTimer(120)">2 минуты</button>
+                <div class="method-card">
+                    <h3>⏱️ Таймер спокойствия</h3>
+                    <p>Просто посиди в тишине и подыши:</p>
+                    <div class="sense-buttons">
+                        <button class="sense-btn" onclick="startTimer(60)">1 минута</button>
+                        <button class="sense-btn" onclick="startTimer(120)">2 минуты</button>
+                    </div>
+                    <p id="timerDisplay" style="margin-top: 1rem; font-size: 1.3rem; font-weight: 600; color: #7B9E87;"></p>
                 </div>
-                <p id="timerDisplay" style="margin-top: 1rem; font-size: 1.5rem;"></p>
             </div>
         </div>
     </section>
@@ -972,21 +1047,25 @@
         </div>
     </section>
 
+    <!-- ========== ИСПРАВЛЕНИЕ 2: Улучшенный блок "Оцени состояние" ========== -->
     <section id="test" class="section">
         <div class="container">
             <h2 class="section-title">📊 Оцени состояние</h2>
             <div class="scale-container">
-                <p>Как ты себя чувствуешь?</p>
-                <input type="range" id="moodScale" min="0" max="100" value="50">
+                <p>Как ты себя чувствуешь прямо сейчас?</p>
+                <div class="slider-wrapper">
+                    <input type="range" id="moodScale" min="0" max="100" value="50" class="slider">
+                </div>
                 <div class="scale-value" id="scaleValue">😐 50%</div>
                 <div class="journal-area">
-                    <p>📝 Запиши свои мысли:</p>
-                    <textarea id="journalNotes" rows="3" placeholder="Что ты сейчас чувствуешь?..."></textarea>
+                    <p>📝 Запиши свои мысли (это поможет снизить тревогу):</p>
+                    <textarea id="journalNotes" rows="3" placeholder="Например: «Я чувствую напряжение в груди, но знаю, что это пройдет»..."></textarea>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- ========== ИСПРАВЛЕНИЕ 3: Компактный блок "Почему тревога" ========== -->
     <section id="why" class="section">
         <div class="container">
             <h2 class="section-title">🧠 Почему тревога?</h2>
@@ -995,11 +1074,14 @@
                     <div class="eyes"><div class="eye"></div><div class="eye"></div></div>
                 </div>
                 <div class="info-bubbles">
-                    <div class="info-bubble" onclick="showInfo('Тревога - нормальная реакция организма')">⚠️ Норма</div>
-                    <div class="info-bubble" onclick="showInfo('Пульс учащается, чтобы защитить тебя')">❤️ Пульс</div>
-                    <div class="info-bubble" onclick="showInfo('Мозг ищет угрозы для защиты')">💭 Мысли</div>
+                    <div class="info-bubble" onclick="showInfo('Тревога - нормальная реакция организма на стресс')">⚠️ Это норма</div>
+                    <div class="info-bubble" onclick="showInfo('Учащенный пульс — это способ мобилизовать силы')">❤️ Пульс</div>
+                    <div class="info-bubble" onclick="showInfo('Мозг ищет угрозы, чтобы защитить тебя')">💭 Мысли</div>
                 </div>
-                <p id="infoDisplay" style="background: rgba(255,255,255,0.5); padding: 1rem; border-radius: 1rem; text-align: center;"></p>
+                <!-- Компактное окно вместо растянутой полоски -->
+                <div class="info-display-card" id="infoDisplayCard">
+                    <p>✨ Нажми на смайлик или на любую кнопку выше, чтобы узнать больше ✨</p>
+                </div>
             </div>
         </div>
     </section>
@@ -1446,10 +1528,10 @@
             senseItems.push(item);
             const feedback = document.getElementById('senseFeedback');
             if(feedback) {
-                feedback.innerHTML = `✓ Найдено: ${senseItems.join(', ')}<br>Отлично! Ты заземляешься.`;
+                feedback.innerHTML = `✓ Найдено: ${senseItems.join(', ')}<br>✨ Отлично! Ты возвращаешься в настоящий момент. ✨`;
                 showNotification(`+ ${item}`, '👁️');
                 if(senseItems.length >= 5) {
-                    feedback.innerHTML += '<br>🎉 Молодец! Тревога снижается!';
+                    feedback.innerHTML += '<br>🎉 Молодец! Тревога снижается! 🎉';
                     showNotification('Ты справилась! Тревога отступает!', '🎉');
                 }
             }
@@ -1459,26 +1541,26 @@
     function relaxBody(part) {
         const feedback = document.getElementById('relaxFeedback');
         if(feedback) {
-            feedback.innerHTML = `✨ Расслабь ${part}... Чувствуешь тепло? ✨`;
+            feedback.innerHTML = `✨ Расслабь ${part}... Почувствуй, как уходит напряжение ✨`;
             showNotification(`Расслабь ${part}`, '🧘');
             setTimeout(() => { feedback.innerHTML = ''; }, 2000);
         }
     }
 
     function showInfo(msg) {
-        const display = document.getElementById('infoDisplay');
-        if(display) {
-            display.innerText = msg;
+        const displayCard = document.getElementById('infoDisplayCard');
+        if(displayCard) {
+            displayCard.innerHTML = `<p>💡 ${msg}</p>`;
             showNotification(msg, '💡');
         }
     }
 
     function showRandomFact() {
         const facts = [
-            'Тревога - это способ организма защитить тебя',
-            'Глубокое дыхание активирует парасимпатическую нервную систему',
-            'Физическая активность помогает снизить тревогу',
-            'Ты не одна, многие люди испытывают тревогу'
+            'Тревога - это способ организма защитить тебя от возможной опасности',
+            'Глубокое дыхание активирует парасимпатическую нервную систему и успокаивает',
+            'Физическая активность помогает снизить уровень гормонов стресса',
+            'Ты не одна, многие люди испытывают тревогу — это нормально'
         ];
         const randomFact = facts[Math.floor(Math.random() * facts.length)];
         showInfo(randomFact);
@@ -1548,7 +1630,7 @@
                 else emoji = '😰';
                 scaleVal.innerText = `${emoji} ${val}%`;
                 localStorage.setItem('lastMood', val);
-                if(val < 30) showNotification('Ты можешь справиться, я рядом', '💪');
+                if(val > 70) showNotification('Тревога сейчас сильна, но она пройдет. Подыши со мной 🌬️', '💚');
             };
             const savedMood = localStorage.getItem('lastMood');
             if(savedMood) {
@@ -1572,7 +1654,6 @@
             if(savedNotes) notes.value = savedNotes;
             notes.oninput = () => {
                 localStorage.setItem('journalNotes', notes.value);
-                showNotification('Мысли сохранены', '📝');
             };
         }
     }
@@ -1676,7 +1757,5 @@
         }, 1000);
     });
     </script>
-</body>
-</html>
 </body>
 </html>
